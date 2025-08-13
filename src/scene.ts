@@ -4,7 +4,7 @@ import { Game } from './engine/game';
 import { Mouse } from './engine/mouse';
 import { randomCell } from './engine/random';
 import { TextEntity } from './engine/text';
-import { offset, ZERO } from './engine/vector';
+import { ZERO } from './engine/vector';
 import { WobblyText } from './engine/wobbly';
 import { TextPop } from './pop';
 import { Tile } from './tile';
