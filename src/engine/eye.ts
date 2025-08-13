@@ -8,7 +8,7 @@ export class Eye extends Entity {
     protected openess = 1;
     protected targetOpeness = 1;
     protected timer: NodeJS.Timeout;
-    protected color = '#000';
+    protected color = '#fff';
 
     constructor(game: Game, x: number, y: number, size: number) {
         super(game, x, y, size, size);

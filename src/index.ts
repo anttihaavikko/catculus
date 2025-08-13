@@ -4,8 +4,9 @@ import { Mouse } from './engine/mouse';
 import { Scene } from './scene';
 // import 'tauri-plugin-gamepad-api';
 
-export const WIDTH = 800;
-export const HEIGHT = 400;
+const upScale = 2;
+export const WIDTH = 800 * upScale;
+export const HEIGHT = 400 * upScale;
 
 const canvas: HTMLCanvasElement = document.createElement('canvas');
 const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
@@ -40,8 +41,8 @@ let isFull = false;
 document.onfullscreenchange = () => isFull = !isFull;
 
 document.onmousemove = (e: MouseEvent) => {
-    mouse.x = isFull ? (e.offsetX - x) / ratio : e.offsetX;
-    mouse.y = isFull ? (e.offsetY - y) / ratio : e.offsetY;
+    mouse.x = (isFull ? (e.offsetX - x) / ratio : e.offsetX) / upScale;
+    mouse.y = (isFull ? (e.offsetY - y) / ratio : e.offsetY) / upScale;
 };
 
 window.onkeydown = (e: KeyboardEvent) => {
@@ -71,6 +72,7 @@ const tick = (t: number) => {
     requestAnimationFrame(tick);
     ctx.resetTransform();
     game.update(t, mouse);
+    ctx.scale(upScale, upScale);
     game.draw(ctx);
 };
 

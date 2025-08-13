@@ -46,7 +46,7 @@ export class Tile extends Entity {
         ctx.save();
         ctx.fillStyle = this.hovered ? 'yellow' : '#fff';
         if (this.picked) ctx.fillStyle = 'orange';
-        const outline = this.hovered ? 'red' : '#000';
+        const outline = this.hovered ? 'red' : '#191D32';
         ctx.strokeStyle = outline;
         ctx.beginPath();
         ctx.lineWidth = 7;

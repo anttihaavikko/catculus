@@ -1,4 +1,4 @@
-import { altFont, font } from './constants';
+import { font } from './constants';
 import { Game } from './game';
 import { clamp01 } from './math';
 import { Mouse } from './mouse';
@@ -42,7 +42,7 @@ export class WobblyText extends TextEntity {
         this.ratio = clamp01(this.scale.x);
         const mod = this.options?.scales ? this.ratio : 1;
         ctx.textAlign = 'left';
-        ctx.font =`${this.fontSize * mod}px ${altFont}`;
+        ctx.font =`${this.fontSize * mod}px ${font}`;
 
         // if(this.options?.shadow) {
         //     ctx.fillStyle = "#000";

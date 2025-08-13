@@ -23,17 +23,17 @@ export interface FaceOptions {
 }
 
 const defaultOptions: FaceOptions = {
-    blush: 'red',
+    blush: '#BA2C73',
     eyeSize: 10,
     width: 1,
-    blinkDiff: 100,
+    blinkDiff: 150,
     blinkDuration: 200,
-    blushSize: 1,
+    blushSize: 1.3,
     mouthWidth: 1,
     mouthThickness: 7,
     blushOffset: 0,
-    color: '#000',
-    mouthColor: '#000'
+    color: '#fff',
+    mouthColor: '#fff'
 };
 
 export class Face extends Entity {
@@ -54,8 +54,8 @@ export class Face extends Entity {
         this.options = { ...defaultOptions };
         this.setOptions(options);
         this.blink(this.options.blinkDuration, this.options.blinkDiff);
-        this.left = new Eye(game, -50 * this.options.width, 0, this.options.eyeSize);
-        this.right = new Eye(game, 50 * this.options.width, 0, this.options.eyeSize);
+        this.left = new Eye(game, -30 * this.options.width, 5, this.options.eyeSize);
+        this.right = new Eye(game, 30 * this.options.width, 5, this.options.eyeSize);
     }
 
     public getOptions(): FaceOptions {
@@ -73,8 +73,8 @@ export class Face extends Entity {
 
     private blink(blinkDuration: number, blinkDiff: number): void {
         if (this.options.noBlink) return;
-        setTimeout(() => this.blinkEye(this.left, blinkDuration, blinkDiff));
-        setTimeout(() => this.blinkEye(this.right, blinkDuration, blinkDiff));
+        setTimeout(() => this.blinkEye(this.left, blinkDuration, blinkDiff), random(0, blinkDiff));
+        setTimeout(() => this.blinkEye(this.right, blinkDuration, blinkDiff), random(0, blinkDiff));
         setTimeout(() => this.blink(blinkDuration, blinkDiff), random(1000, 4000));
     }
 
@@ -155,11 +155,11 @@ export class Face extends Entity {
             ctx.save();
             ctx.translate(0, 5);
             // drawCircle(ctx, { x: 0, y: 12 }, 8, '#000', '#000');
-            ctx.moveTo(0, 20);
-            ctx.lineTo(-15, 0);
-            ctx.lineTo(15, 0);
-            ctx.closePath();
-            ctx.fill();
+            // ctx.moveTo(0, 10);
+            // ctx.lineTo(-20, 0);
+            // ctx.lineTo(20, 0);
+            // ctx.closePath();
+            // ctx.fill();
             ctx.lineWidth = this.options.mouthThickness * 0.01;
             ctx.beginPath();
             ctx.moveTo(-40 * mw, start);

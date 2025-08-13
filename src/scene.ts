@@ -1,11 +1,11 @@
+import { Cat } from './cat';
 import { Container } from './engine/container';
 import { Game } from './engine/game';
 import { Mouse } from './engine/mouse';
 import { randomCell } from './engine/random';
 import { TextEntity } from './engine/text';
-import { ZERO } from './engine/vector';
+import { offset, ZERO } from './engine/vector';
 import { WobblyText } from './engine/wobbly';
-import { WIDTH } from './index';
 import { TextPop } from './pop';
 import { Tile } from './tile';
 
@@ -19,6 +19,7 @@ export class Scene extends Container {
     private locked: boolean;
     private targetLabel: TextEntity;
     private sumLabel: TextEntity;
+    private cats: Cat[] = [];
     
     constructor(game: Game) {
         super(game);
@@ -26,15 +27,19 @@ export class Scene extends Container {
         this.tiles = Array.from(Array(GRID_SIZE * GRID_SIZE)).map((_, i) => new Tile(game, i));
 
         this.targetLabel = new TextEntity(game, '', 50, 500, 220, -1, ZERO, { shadow: 5 });
-        this.sumLabel = new WobblyText(game, '', 25, WIDTH * 0.5, 30, 0.5, 3, { shadow: 3 });
+        this.sumLabel = new WobblyText(game, '', 25, 400, 30, 0.5, 3, { shadow: 3 });
         
         this.add(...this.tiles, this.targetLabel, this.sumLabel);
 
         this.findTarget();
+
+        this.addCat();
     }
     
     public update(tick: number, mouse: Mouse): void {
         super.update(tick, mouse);
+
+        this.game.canvas.style.cursor = this.tiles.some(t => !t.hidden && t.hovered) ? 'pointer' : 'default';
 
         if (mouse.pressing && !this.locked) {
             const tile = this.tiles.find(t => t.hovered);
@@ -89,10 +94,17 @@ export class Scene extends Container {
         }
         this.picks.push(tile);
     }
+    
+    private addCat(): void {
+        const cat = new Cat(this.game, 100, 100);
+        this.cats.push(cat);
+        this.add(cat);
+        // cat.hop(offset(randomCell(this.tiles.filter(t => !t.hidden)).getCenter(), 0, 5));
+    }
 
     public draw(ctx: CanvasRenderingContext2D): void {
         ctx.save();
-        ctx.fillStyle = '#333';
+        ctx.fillStyle = '#453A49';
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         super.draw(ctx);
         ctx.restore();
