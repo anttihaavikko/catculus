@@ -4,7 +4,7 @@ import { Game } from './engine/game';
 import { Mouse } from './engine/mouse';
 import { randomCell } from './engine/random';
 import { TextEntity } from './engine/text';
-import { ZERO } from './engine/vector';
+import { offset, ZERO } from './engine/vector';
 import { WobblyText } from './engine/wobbly';
 import { TextPop } from './pop';
 import { Tile } from './tile';
@@ -28,11 +28,10 @@ export class Scene extends Container {
 
         this.targetLabel = new TextEntity(game, '', 50, 500, 220, -1, ZERO, { shadow: 5 });
         this.sumLabel = new WobblyText(game, '', 25, 400, 30, 0.5, 3, { shadow: 3 });
-        
+    
         this.add(...this.tiles, this.targetLabel, this.sumLabel);
 
         this.findTarget();
-
         this.addCat();
     }
     
@@ -55,6 +54,10 @@ export class Scene extends Container {
                     this.picks.sort((a, b) => a.value - b.value).forEach((t, i) => {
                         setTimeout(() => {
                             this.add(new TextPop(this.game, (t.value * this.picks.length).toString(), t.p));
+                            if (t.cat) {
+                                this.hopCat(t.cat);
+                                t.cat = null;
+                            }
                         }, i * 75);
                     });
                     setTimeout(() => {
@@ -66,6 +69,7 @@ export class Scene extends Container {
                         this.picks = [];
                         this.findTarget();
                         this.sumLabel.content = '';
+                        this.addCat();
                     }, 1000);
                 }
             }
@@ -96,10 +100,21 @@ export class Scene extends Container {
     }
     
     private addCat(): void {
-        const cat = new Cat(this.game, 100, 100);
+        if (!this.tiles.some(t => !t.hidden && !t.cat)) return;
+        const cat = new Cat(this.game, 900, 320);
         this.cats.push(cat);
         this.add(cat);
-        // cat.hop(offset(randomCell(this.tiles.filter(t => !t.hidden)).getCenter(), 0, 5));
+        cat.hop({ x: 700, y: 320 });
+        setTimeout(() => cat.hop({ x: 500, y: 300 }), 1000);
+        setTimeout(() => cat.hop({ x: 400, y: 220 }), 1700);
+        setTimeout(() => this.hopCat(cat), 2600);
+    }
+
+    private hopCat(cat: Cat): void {
+        const tile = randomCell(this.tiles.filter(t => !t.hidden && !t.cat));
+        if (!tile) return;
+        tile.cat = cat;
+        cat.hop(offset(tile.getCenter(), 0, 5));
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {

@@ -1,3 +1,4 @@
+import { Cat } from './cat';
 import { font } from './engine/constants';
 import { Entity } from './engine/entity';
 import { Game } from './engine/game';
@@ -13,6 +14,7 @@ export class Tile extends Entity {
     public hovered: boolean;
     public picked: boolean;
     public hidden: boolean;
+    public cat: Cat;
 
     public constructor(game: Game, i: number) {
         const size = TILE_SIZE + TILE_GAP;
@@ -24,6 +26,10 @@ export class Tile extends Entity {
             this.value = 1;
             this.hidden = true;
         }
+    }
+
+    public getVisibleValue(): string {
+        return this.cat ? '?' : this.value.toString();
     }
 
     public appear(): void {
