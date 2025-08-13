@@ -1,11 +1,12 @@
 import { Container } from './engine/container';
 import { Game } from './engine/game';
 import { Mouse } from './engine/mouse';
-import { randomCell } from './engine/random';
+import { randomCell, randomSorter } from './engine/random';
 import { TextEntity } from './engine/text';
 import { ZERO } from './engine/vector';
 import { WobblyText } from './engine/wobbly';
 import { WIDTH } from './index';
+import { TextPop } from './pop';
 import { Tile } from './tile';
 
 export const GRID_SIZE = 7;
@@ -46,8 +47,13 @@ export class Scene extends Container {
 
                 if (sum >= this.target) {
                     console.log(`DONE, DIFF: ${sum - this.target}`);
+                    this.picks.sort(randomSorter).forEach((t, i) => {
+                        setTimeout(() => {
+                            this.add(new TextPop(this.game, (t.value * this.picks.length).toString(), t.p));
+                        }, i * 50);
+                    });
                     setTimeout(() => {
-                        this.tiles.filter(t => t.hidden && this.picks.some(p => p.isClose(t))).forEach(t => t.hidden = false);
+                        this.tiles.filter(t => t.hidden && this.picks.some(p => p.isClose(t))).forEach(t => t.appear());
                         this.picks.forEach(t => {
                             t.picked = false;
                             t.value++;

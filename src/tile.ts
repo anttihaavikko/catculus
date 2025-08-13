@@ -26,6 +26,12 @@ export class Tile extends Entity {
         }
     }
 
+    public appear(): void {
+        this.hidden = false;
+        this.scale = { x: 0, y: 0 };
+        this.tween.scale({ x: 1, y: 1 }, 0.3);
+    }
+
     public isClose(other: Tile): boolean {
         return distance(this.p, other.p) < TILE_SIZE * 1.5;
     }
@@ -45,6 +51,9 @@ export class Tile extends Entity {
         ctx.beginPath();
         ctx.lineWidth = 7;
         ctx.translate(this.p.x, this.p.y);
+        ctx.translate(this.s.x * 0.5, this.s.y * 0.5);
+        ctx.scale(this.scale.x, this.scale.y);
+        ctx.translate(-this.s.x * 0.5, -this.s.y * 0.5);
         ctx.rect(0, 0, this.s.x, this.s.y);
         ctx.stroke();
         ctx.fill();
