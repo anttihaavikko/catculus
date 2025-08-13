@@ -47,6 +47,7 @@ export class Scene extends Container {
                 if (sum >= this.target) {
                     console.log(`DONE, DIFF: ${sum - this.target}`);
                     setTimeout(() => {
+                        this.tiles.filter(t => t.hidden && this.picks.some(p => p.isClose(t))).forEach(t => t.hidden = false);
                         this.picks.forEach(t => {
                             t.picked = false;
                             t.value++;
