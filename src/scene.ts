@@ -4,6 +4,8 @@ import { Mouse } from './engine/mouse';
 import { randomCell } from './engine/random';
 import { TextEntity } from './engine/text';
 import { ZERO } from './engine/vector';
+import { WobblyText } from './engine/wobbly';
+import { WIDTH } from './index';
 import { Tile } from './tile';
 
 export const GRID_SIZE = 7;
@@ -22,8 +24,8 @@ export class Scene extends Container {
 
         this.tiles = Array.from(Array(GRID_SIZE * GRID_SIZE)).map((_, i) => new Tile(game, i));
 
-        this.targetLabel = new TextEntity(game, '', 50, 500, 220, -1, ZERO);
-        this.sumLabel = new TextEntity(game, '', 50, 550, 220, -1, ZERO);
+        this.targetLabel = new TextEntity(game, '', 50, 500, 220, -1, ZERO, { shadow: 5 });
+        this.sumLabel = new WobblyText(game, '', 25, WIDTH * 0.5, 30, 0.5, 3, { shadow: 3 });
         
         this.add(...this.tiles, this.targetLabel, this.sumLabel);
 
@@ -40,9 +42,10 @@ export class Scene extends Container {
                 this.toggle(tile);
 
                 const sum = this.picks.reduce((acc, t) => acc + t.value, 0);
+                this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.value).join('+')}=${sum}` : '';
+
                 if (sum >= this.target) {
                     console.log(`DONE, DIFF: ${sum - this.target}`);
-                    console.log('--------------');
                     setTimeout(() => {
                         this.picks.forEach(t => {
                             t.picked = false;
@@ -50,7 +53,8 @@ export class Scene extends Container {
                         });
                         this.picks = [];
                         this.findTarget();
-                    }, 500);
+                        this.sumLabel.content = '';
+                    }, 1000);
                 }
             }
         }
@@ -64,7 +68,7 @@ export class Scene extends Container {
 
     private generateTarget(count: number): number {
         const cells = [randomCell(this.tiles.filter(t => !t.hidden))];
-        for (let i = 0; i < count - 1; i++) {
+        for (let i = 0; i < Math.min(count, Math.floor(this.tiles.filter(t => !t.hidden).length / 2)) - 1; i++) {
             cells.push(randomCell(this.tiles.filter(t => !t.hidden && !cells.includes(t) && cells.some(c => c.isClose(t)))));
         }
         // console.log(`FROM: ${cells.map(t => t.value).join(', ')}`);
