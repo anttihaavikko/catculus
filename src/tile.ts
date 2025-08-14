@@ -3,6 +3,7 @@ import { font } from './engine/constants';
 import { Entity } from './engine/entity';
 import { Game } from './engine/game';
 import { Mouse } from './engine/mouse';
+import { Pulser } from './engine/pulser';
 import { distance } from './engine/vector';
 import { GRID_SIZE } from './scene';
 
@@ -15,6 +16,8 @@ export class Tile extends Entity {
     public picked: boolean;
     public hidden: boolean;
     public cat: Cat;
+
+    private pulser = new Pulser();
 
     public constructor(game: Game, i: number) {
         const size = TILE_SIZE + TILE_GAP;
@@ -36,6 +39,11 @@ export class Tile extends Entity {
         this.hidden = false;
         this.scale = { x: 0, y: 0 };
         this.tween.scale({ x: 1, y: 1 }, 0.3);
+        this.pulse(0.5);
+    }
+
+    public pulse(speed: number): void {
+        this.pulser.pulse(speed * 0.6);
     }
 
     public isClose(other: Tile): boolean {
@@ -45,6 +53,7 @@ export class Tile extends Entity {
     public update(tick: number, mouse: Mouse): void {
         this.hovered = this.isInside(mouse, 1);
         super.update(tick, mouse);
+        this.pulser.update(this.delta * 0.01);
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
@@ -58,7 +67,7 @@ export class Tile extends Entity {
         ctx.lineWidth = 7;
         ctx.translate(this.p.x, this.p.y);
         ctx.translate(this.s.x * 0.5, this.s.y * 0.5);
-        ctx.scale(this.scale.x, this.scale.y);
+        ctx.scale(this.scale.x + this.pulser.ratio * 0.1, this.scale.y + this.pulser.ratio * 0.1);
         ctx.translate(-this.s.x * 0.5, -this.s.y * 0.5);
         ctx.rect(0, 0, this.s.x, this.s.y);
         ctx.stroke();
@@ -67,7 +76,9 @@ export class Tile extends Entity {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.font = `20px ${font}`;
-        ctx.fillText(this.value.toString(), this.s.x / 2, this.s.y / 2);
+        ctx.translate(this.s.x / 2, this.s.y / 2);
+        ctx.scale(1 + this.pulser.ratio * 0.2, 1 + this.pulser.ratio * 0.2);
+        ctx.fillText(this.value.toString(), 0, 0);
         ctx.restore();
     }
 }

@@ -67,6 +67,7 @@ export class Scene extends Container {
         this.picks.forEach((t, i) => {
             setTimeout(() => {
                 this.game.audio.score(i);
+                t.pulse(0.8);
                 const amount = t.value * this.picks.length * (t.cat ? 2 : 1);
                 this.add(new TextPop(this.game, amount.toString(), t.p));
                 if (t.cat) {
@@ -106,6 +107,7 @@ export class Scene extends Container {
 
     private toggle(tile: Tile): void {
         this.game.audio.pick();
+        tile.pulse(1);
         if (this.picks.includes(tile)) {
             this.picks = this.picks.filter(t => t !== tile);
             return;
