@@ -4,7 +4,7 @@ import { Entity } from './engine/entity';
 import { Game } from './engine/game';
 import { Mouse } from './engine/mouse';
 import { Pulser } from './engine/pulser';
-import { distance } from './engine/vector';
+import { distance, normalize, Vector } from './engine/vector';
 import { GRID_SIZE } from './scene';
 
 export const TILE_SIZE = 40;
@@ -18,6 +18,7 @@ export class Tile extends Entity {
     public cat: Cat;
 
     private pulser = new Pulser();
+    private nudgeDir: Vector = { x: 0, y: 0 };
 
     public constructor(game: Game, i: number) {
         super(game, 0, 0, TILE_SIZE, TILE_SIZE);
@@ -58,7 +59,16 @@ export class Tile extends Entity {
     }
 
     public pulse(speed: number): void {
+        this.nudgeDir = { x: 0, y: 0 };
         this.pulser.pulse(speed * 0.6);
+    }
+
+    public nudge(target: Vector): void {
+        const dir = normalize({
+            x: target.x - this.p.x,
+            y: target.y - this.p.y
+        });
+        this.nudgeDir = { x: -dir.x * 5, y: -dir.y * 5 };
     }
 
     public isClose(other: Tile): boolean {
@@ -81,7 +91,7 @@ export class Tile extends Entity {
         ctx.strokeStyle = outline;
         ctx.beginPath();
         ctx.lineWidth = 7;
-        ctx.translate(this.p.x, this.p.y);
+        ctx.translate(this.p.x + this.nudgeDir.x * this.pulser.ratio, this.p.y + this.nudgeDir.y * this.pulser.ratio);
         ctx.translate(this.s.x * 0.5, this.s.y * 0.5);
         ctx.scale(this.scale.x + this.pulser.ratio * 0.15, this.scale.y + this.pulser.ratio * 0.15);
         ctx.translate(-this.s.x * 0.5, -this.s.y * 0.5);

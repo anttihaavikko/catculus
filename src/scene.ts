@@ -39,6 +39,10 @@ export class Scene extends Container {
         // const cat = new Cat(this.game, 50, 50);
         // setTimeout(() => cat.sleep(true), 500);
         // this.add(cat);
+
+        this.game.onKeyDown(e => {
+            if (e.key === 'a') this.addCat();
+        });
     }
     
     public update(tick: number, mouse: Mouse): void {
@@ -82,16 +86,16 @@ export class Scene extends Container {
         this.picks.forEach((t, i) => {
             setTimeout(() => {
                 this.game.audio.score(i);
+                t.pulse(0.6);
                 if (i > 0) {
                     this.add(new LineParticle(this.game, this.picks[i - 1].getCenter(), t.getCenter(), 1, 5, 'yellow', random(0, 10)));
                 }
+                if (i < this.picks.length - 1) t.nudge(this.picks[i + 1].p);
                 t.picked = false;
-                t.pulse(0.6);
-                const amount = t.value * this.picks.length * (t.cat ? 2 : 1);
-                this.add(new TextPop(this.game, amount.toString(), t.p, !!t.cat));
+                const amount = t.value * (i + 1) * (t.cat ? 2 : 1);
+                this.add(new TextPop(this.game, amount.toString(), t.p, t.cat ? 'yellow' : '#fff'));
                 if (t.cat) {
-                    this.hopCat(t.cat);
-                    t.cat = null;
+                    this.hopCat(t.cat, t);
                 }
             }, i * 120 + 300);
         });
@@ -143,10 +147,11 @@ export class Scene extends Container {
         setTimeout(() => this.hopCat(cat), 2600);
     }
 
-    private hopCat(cat: Cat): void {
+    private hopCat(cat: Cat, prev: Tile = null): void {
         const tile = randomCell(this.tiles.filter(t => !t.hidden && !t.cat));
         if (!tile) return;
         tile.cat = cat;
+        if (prev) prev.cat = null;
         cat.hop(offset(tile.getCenter(), 0, 5));
     }
 
