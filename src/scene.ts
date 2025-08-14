@@ -2,6 +2,7 @@ import { Cat, catPathLandscape, catPathPortrait } from './cat';
 import { Container } from './engine/container';
 import { Game } from './engine/game';
 import { LineParticle } from './engine/line';
+import { asScore } from './engine/math';
 import { Mouse } from './engine/mouse';
 import { random, randomCell } from './engine/random';
 import { TextEntity } from './engine/text';
@@ -11,6 +12,13 @@ import { TextPop } from './pop';
 import { Tile } from './tile';
 
 export const GRID_SIZE = 7;
+
+const helpTexts = [
+    ['Select |adjacent tiles', 'that |add up| to...'],
+    ['Too many |mistakes', '|means| you\'ll |lose|...'],
+    ['Tiles with |cats| on them', 'will |score| for |more|!'],
+    ['Playing |faster| will also', 'earn you |bigger points|!']
+];
 
 export class Scene extends Container {
     private tiles: Tile[];
@@ -22,6 +30,9 @@ export class Scene extends Container {
     private sumLabel: TextEntity;
     private cats: Cat[] = [];
     private catPath = catPathLandscape;
+    private scoreLabel: TextEntity;
+    private score: number = 0;
+    private helpTexts: WobblyText[];
     
     constructor(game: Game) {
         super(game);
@@ -30,8 +41,13 @@ export class Scene extends Container {
 
         this.targetLabel = new TextEntity(game, '', 50, 500, 220, -1, ZERO, { shadow: 5 });
         this.sumLabel = new WobblyText(game, '', 25, 400, 30, 0.5, 3, { shadow: 3 });
-    
-        this.add(...this.tiles, this.targetLabel, this.sumLabel);
+        this.scoreLabel = new TextEntity(game, '0', 40, 790, 40, -1, ZERO, { shadow: 3, align: 'right' });
+        this.helpTexts = [
+            new WobblyText(game, '', 30, 500, 50, 0.25, 2.5, { shadow: 3, scales: true }),
+            new WobblyText(game, '', 30, 500, 80, 0.25, 2.5, { shadow: 3, scales: true }),
+        ];
+
+        this.add(...this.tiles, this.targetLabel, this.sumLabel, this.scoreLabel, ...this.helpTexts);
 
         this.findTarget();
         // this.addCat();
@@ -81,15 +97,29 @@ export class Scene extends Container {
             }
         }
     }
+
+    private showHelp(): void {
+        this.helpTexts.forEach((ht, i) => {
+            ht.toggle(helpTexts[this.level]?.[i] ?? '');
+        });
+    }
+
+    private clearHelp(): void {
+        this.helpTexts.forEach(ht => ht.toggle(''));
+    }
     
     public ratioChanged(portrait: boolean): void {
-        this.tiles.forEach((t, i) => t.moveTo(i, portrait ? 40 : 50, portrait ? 400 : 45));
+        this.tiles.forEach((t, i) => t.moveTo(i, portrait ? 45 : 50, portrait ? 400 : 45));
         this.targetLabel.p = portrait ? { x: 200, y: 320 } : { x: 550, y: 220 };
-        this.sumLabel.p = { x: portrait ? 200 : 400, y: 40 };
+        this.sumLabel.p = { x: portrait ? 200 : 400, y: portrait ? 120 : 40 };
         this.catPath = portrait ? catPathPortrait : catPathLandscape;
+        this.scoreLabel.p = portrait ? { x: 390, y: 40 } : { x: 790, y: 40 };
+        // this.scoreLabel.setOptions({ align: portrait ? 'center' : 'right'});
+        this.helpTexts.forEach((ht, i) => ht.p = portrait ? { x: 200, y: 200 + i * 35 } : { x: 550, y: 110 + i * 35});
     }
 
     private scoreRound(sum: number): void {
+        this.clearHelp();
         this.locked = true;
         this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.value).join('+')}=${sum}` : '';
         console.log(`DONE, DIFF: ${sum - this.target}`);
@@ -117,7 +147,9 @@ export class Scene extends Container {
                 if (i < this.picks.length - 1) t.nudge(this.picks[i + 1].p);
                 t.picked = false;
                 const amount = t.value * (i + 1) * (t.cat ? 2 : 1);
-                this.add(new TextPop(this.game, amount.toString(), t.getCenter(), t.cat ? 'yellow' : '#fff'));
+                this.score += amount;
+                this.scoreLabel.content = asScore(this.score);
+                this.add(new TextPop(this.game, asScore(amount), t.getCenter(), t.cat ? 'yellow' : '#fff'));
                 if (t.cat) {
                     this.hopCat(t.cat, t);
                 }
@@ -138,6 +170,7 @@ export class Scene extends Container {
     }
 
     private findTarget(): void {
+        this.showHelp();
         this.level++;
         this.target = this.generateTarget(this.level + 1);
         this.targetLabel.content = this.target.toString();

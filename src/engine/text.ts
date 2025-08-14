@@ -34,6 +34,10 @@ export class TextEntity extends Particle {
         ctx.font =`${this.fontSize * mod}px ${font}`;
         return Math.max(...this.content.split('\n').map(t => ctx.measureText(t).width));
     }
+
+    public setOptions(opts: TextOptions): void {
+        this.options = { ...this.options, ...opts };
+    }
 }
 
 export interface TextOptions {

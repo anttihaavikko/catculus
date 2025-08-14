@@ -2,7 +2,7 @@ import { font } from './constants';
 import { Game } from './game';
 import { clamp01 } from './math';
 import { Mouse } from './mouse';
-import { plusMinus } from './random';
+import { plusMinus, random } from './random';
 import { TextEntity, TextOptions } from './text';
 import { Vector, ZERO } from './vector';
 
@@ -28,12 +28,13 @@ export class WobblyText extends TextEntity {
 
     public toggle(text: string): void {
         clearTimeout(this.timer);
+        const dur = random(0.2, 0.5);
         this.timer = setTimeout(() => {
             this.content = text;
             this.scramble(this.scrambled);
-        }, text ? 0 : 200);
+        }, text ? 0 : (dur * 1000));
         const s = text ? 1 : 0;
-        this.tween.scale({ x: s, y: s }, 0.2);
+        this.tween.scale({ x: s, y: s }, dur);
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
