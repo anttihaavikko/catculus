@@ -1,4 +1,3 @@
-import { font } from './engine/constants';
 import { Entity } from './engine/entity';
 import { Game } from './engine/game';
 import { TextEntity } from './engine/text';

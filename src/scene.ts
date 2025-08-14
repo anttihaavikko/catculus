@@ -173,10 +173,12 @@ export class Scene extends Container {
         this.add(new TextPop(this.game, perfect ? winText : badText, pp, perfect ? 'yellow' : 'red', 20));
         if (perfect) this.game.audio.done();
         else {
+            this.game.camera.shake(5, 0.1);
             this.game.audio.bad();
             setTimeout(() => {
                 this.game.audio.bad();
                 this.add(new TextPop(this.game, `${this.target.value - sum}`, pp, 'red'));
+                this.game.camera.shake(5, 0.15);
             }, 300);
         }
         this.picks.reverse();
@@ -191,7 +193,7 @@ export class Scene extends Container {
                 }
                 if (i < this.picks.length - 1) t.nudge(this.picks[i + 1].p);
                 t.picked = false;
-                const amount = t.value * (i + 1) * (t.cat ? 2 : 1) * this.multi.value;
+                const amount = t.value * (i + 1) * (t.cat ? 5 : 1) * this.multi.value * (perfect ? 5 : 1);
                 this.score += amount;
                 this.scoreLabel.content = asScore(this.score);
                 this.add(new TextPop(this.game, asScore(amount), t.getCenter(), t.cat ? 'yellow' : '#fff'));
@@ -201,9 +203,9 @@ export class Scene extends Container {
             }, i * 120 + 300 + (perfect ? 0 : 500));
         });
         setTimeout(() => {
-
             if (this.life.isDead()) {
                 setTimeout(() => {
+                    this.game.camera.shake(5, 0.2);
                     this.helpTexts[0].toggle('|GAME OVER|!');
                     this.helpTexts[1].toggle(`Final score: |${asScore(this.score)}`);
                     this.game.audio.bad();
@@ -273,7 +275,7 @@ export class Scene extends Container {
     public draw(ctx: CanvasRenderingContext2D): void {
         ctx.save();
         ctx.fillStyle = COLORS.bg;
-        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.fillRect(-100, -100, ctx.canvas.width + 200, ctx.canvas.height + 200);
         super.draw(ctx);
         ctx.restore();
         
