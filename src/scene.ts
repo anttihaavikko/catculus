@@ -63,7 +63,8 @@ export class Scene extends Container {
         this.locked = true;
         this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.value).join('+')}=${sum}` : '';
         console.log(`DONE, DIFF: ${sum - this.target}`);
-        this.picks.sort((a, b) => a.value - b.value).forEach((t, i) => {
+        this.picks.reverse();
+        this.picks.forEach((t, i) => {
             setTimeout(() => {
                 this.game.audio.score(i);
                 const amount = t.value * this.picks.length * (t.cat ? 2 : 1);
@@ -85,7 +86,7 @@ export class Scene extends Container {
             this.sumLabel.content = '';
             this.addCat();
             this.locked = false;
-        }, 1000);
+        }, 500 + this.picks.length * 120);
     }
 
     private findTarget(): void {
