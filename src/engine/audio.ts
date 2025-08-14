@@ -212,8 +212,9 @@ export class AudioManager {
     }
 
     public score(i: number): void {
+        const octave = Math.ceil(i / 7);
         const notes = [220, 246.9417, 261.6256, 293.6648, 329.6276, 349.2282, 391.9954];
-        this.play([,,notes[i % notes.length],.02,.01,.07,1,.4,,,368,.05,,.3,,,,.7,.02]);
+        this.play([,,notes[i % 7] * octave,.02,.01,.07,1,.4,,,368,.05,,.3,,,,.7,.02]);
     }
 
     public done(): void {
