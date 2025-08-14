@@ -32,7 +32,7 @@ export class Scene extends Container {
         this.add(...this.tiles, this.targetLabel, this.sumLabel);
 
         this.findTarget();
-        this.addCat();
+        // this.addCat();
     }
     
     public update(tick: number, mouse: Mouse): void {
@@ -47,13 +47,17 @@ export class Scene extends Container {
                 this.toggle(tile);
 
                 const sum = this.picks.reduce((acc, t) => acc + t.value, 0);
-                this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.value).join('+')}=${sum}` : '';
+                // const knownSum = this.picks.reduce((acc, t) => acc + (t.cat ? 0 : t.value), 0);
+                const shownSum = this.picks.some(t => t.cat) ? '???' : `${sum}`;
+                this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.getVisibleValue()).join('+')}=${shownSum}` : '';
 
                 if (sum >= this.target) {
+                    this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.value).join('+')}=${sum}` : '';
                     console.log(`DONE, DIFF: ${sum - this.target}`);
                     this.picks.sort((a, b) => a.value - b.value).forEach((t, i) => {
                         setTimeout(() => {
-                            this.add(new TextPop(this.game, (t.value * this.picks.length).toString(), t.p));
+                            const amount = t.value * this.picks.length * (t.cat ? 2 : 1);
+                            this.add(new TextPop(this.game, amount.toString(), t.p));
                             if (t.cat) {
                                 this.hopCat(t.cat);
                                 t.cat = null;
