@@ -36,9 +36,22 @@ export class Scene extends Container {
         this.findTarget();
         // this.addCat();
 
-        // const cat = new Cat(this.game, 50, 50);
-        // setTimeout(() => cat.sleep(true), 500);
-        // this.add(cat);
+        // demo cats
+        
+        // const cat1 = new Cat(this.game, 50, 100);
+        // this.add(cat1);
+
+        // const cat2 = new Cat(this.game, 150, 100);
+        // setTimeout(() => cat2.sleep(true), 500);
+        // this.add(cat2);
+
+        // const cat3 = new Cat(this.game, 90, 100);
+        // const hopCat = (dir: number) => {
+        //     cat3.hop(offset(cat3.p, dir * 20, 0));
+        //     setTimeout(() => hopCat(-dir), 900);
+        // };
+        // this.add(cat3);
+        // hopCat(1);
 
         this.game.onKeyDown(e => {
             if (e.key === 'a') this.addCat();
