@@ -37,7 +37,7 @@ export class Scene extends Container {
         // this.addCat();
 
         // demo cats
-        
+
         // const cat1 = new Cat(this.game, 50, 100);
         // this.add(cat1);
 
@@ -95,7 +95,7 @@ export class Scene extends Container {
         this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.value).join('+')}=${sum}` : '';
         console.log(`DONE, DIFF: ${sum - this.target}`);
         const perfect = sum === this.target;
-        const pp = offset(this.picks[this.picks.length - 1].getCenter(), 0, -10);
+        const pp = offset(this.picks[this.picks.length - 1].getCenter(), 0, -2);
         const text = randomCell([
             'PURRFECT!',
             'PAWFECT!',
