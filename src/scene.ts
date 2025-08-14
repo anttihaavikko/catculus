@@ -86,7 +86,7 @@ export class Scene extends Container {
             this.sumLabel.content = '';
             this.addCat();
             this.locked = false;
-        }, 500 + this.picks.length * 120);
+        }, 800 + this.picks.length * 120);
     }
 
     private findTarget(): void {
