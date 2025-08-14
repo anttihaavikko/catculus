@@ -131,7 +131,7 @@ export class Scene extends Container {
     }
     
     public ratioChanged(portrait: boolean): void {
-        this.tiles.forEach((t, i) => t.moveTo(i, portrait ? 45 : 50, portrait ? 400 : 30));
+        this.tiles.forEach((t, i) => t.moveTo(i, portrait ? 45 : 50, portrait ? 400 : 45));
         this.target.p = portrait ? { x: 200, y: 320 } : { x: 550, y: 270 };
         this.sumLabel.p = { x: portrait ? 200 : 400, y: portrait ? 150 : 380 };
         this.catPath = portrait ? catPathPortrait : catPathLandscape;
@@ -149,14 +149,15 @@ export class Scene extends Container {
         const diff = sum - this.target.value;
         const perfect = diff === 0;
         const pp = offset(this.picks[this.picks.length - 1].getCenter(), 0, -2);
-        const text = randomCell([
+        const winText = randomCell([
             'PURRFECT!',
             'PAWFECT!',
             'PAWLESS!',
             'MEOWRVELOUS!',
             'FURFECT!'
         ]);
-        this.add(new TextPop(this.game, perfect ? text : 'MISTAKE', pp, perfect ? 'yellow' : 'red', 20));
+        const badText = randomCell(['MEOWSTAKE!', 'PURROR!']);
+        this.add(new TextPop(this.game, perfect ? winText : badText, pp, perfect ? 'yellow' : 'red', 20));
         if (perfect) this.game.audio.done();
         else {
             this.game.audio.bad();

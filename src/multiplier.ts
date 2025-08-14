@@ -3,6 +3,7 @@ import { Container } from './engine/container';
 import { Game } from './engine/game';
 import { clamp01 } from './engine/math';
 import { Mouse } from './engine/mouse';
+import { Pulser } from './engine/pulser';
 import { TextEntity } from './engine/text';
 import { ZERO } from './engine/vector';
 
@@ -12,6 +13,7 @@ export class Multiplier extends Container {
     
     private text: TextEntity;
     private ratio: number = 0;
+    private pulser = new Pulser();
 
     constructor(game: Game, x: number, y: number) {
         super(game, x, y);
@@ -24,10 +26,12 @@ export class Multiplier extends Container {
         this.ratio = 0;
         this.value = val;
         this.text.content = `x${this.value}`;
+        this.pulser.pulse();
     }
 
     public update(tick: number, mouse: Mouse): void {
         super.update(tick, mouse);
+        this.pulser.update(this.delta * 0.0075);
 
         if (this.paused) return;
 
@@ -36,12 +40,15 @@ export class Multiplier extends Container {
         if (this.ratio > 0.99 && this.value > 1) {
             this.reset(this.value - 1);
             this.ratio = 0;
+            this.game.audio.multi();
+            this.pulser.pulse();
         }
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
         ctx.save();
         ctx.translate(this.p.x, this.p.y);
+        ctx.scale(1 + this.pulser.ratio * 0.2, 1 + this.pulser.ratio * 0.2);
 
         if (this.value > 1) {
             ctx.beginPath();
