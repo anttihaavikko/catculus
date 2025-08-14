@@ -29,7 +29,7 @@ export class Tile extends Entity {
     }
 
     public getVisibleValue(): string {
-        return this.cat ? '?' : this.value.toString();
+        return this.cat ? '?' : `${this.value}`;
     }
 
     public appear(): void {
