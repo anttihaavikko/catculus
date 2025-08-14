@@ -5,8 +5,8 @@ import { TextEntity } from './engine/text';
 import { Vector } from './engine/vector';
 
 export class TextPop extends TextEntity {
-    constructor(game: Game, text: string, pos: Vector, color: string) {
-        super(game, text, 30, pos.x, pos.y, random(0.7, 0.9), { x: 0, y: random(-0.5, -0.7) }, { shadow: 3, scales: true });
+    constructor(game: Game, text: string, pos: Vector, color: string, size: number = 30) {
+        super(game, text, size, pos.x, pos.y, random(0.7, 0.9), { x: 0, y: random(-0.5, -0.7) }, { shadow: 3, scales: true });
         this.options.color = color;
         this.d = 200;
     }

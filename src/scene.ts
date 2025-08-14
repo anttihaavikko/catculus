@@ -1,7 +1,6 @@
 import { Cat, catPathLandscape, catPathPortrait } from './cat';
 import { COLORS } from './colors';
 import { Container } from './engine/container';
-import { drawCircle } from './engine/drawing';
 import { Game } from './engine/game';
 import { LineParticle } from './engine/line';
 import { asScore } from './engine/math';
@@ -10,6 +9,7 @@ import { random, randomCell } from './engine/random';
 import { TextEntity } from './engine/text';
 import { offset, ZERO } from './engine/vector';
 import { WobblyText } from './engine/wobbly';
+import { Life } from './life';
 import { Multiplier } from './multiplier';
 import { TextPop } from './pop';
 import { Target } from './target';
@@ -39,6 +39,7 @@ export class Scene extends Container {
     private multi: Multiplier;
     private holdMask: boolean;
     private prev: Tile;
+    private life: Life;
     
     constructor(game: Game) {
         super(game);
@@ -53,10 +54,12 @@ export class Scene extends Container {
         ];
         this.target = new Target(game, 500, 220);
         this.multi = new Multiplier(game, 765, 73);
-        
-        this.helpTexts.forEach(ht => ht.d = 500);
+        this.life = new Life(game, 10, 10, 200, 20);
 
-        this.add(...this.tiles, this.sumLabel, this.scoreLabel, ...this.helpTexts, this.target, this.multi);
+        this.helpTexts.forEach(ht => ht.d = 500);
+        this.life.d = this.multi.d = this.scoreLabel.d = 400;
+
+        this.add(...this.tiles, this.sumLabel, this.scoreLabel, ...this.helpTexts, this.target, this.multi, this.life);
 
         this.findTarget();
         // this.addCat();
@@ -143,7 +146,8 @@ export class Scene extends Container {
         this.clearHelp();
         this.locked = true;
         this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.value).join('+')}=${sum}` : '';
-        const perfect = sum === this.target.value;
+        const diff = sum - this.target.value;
+        const perfect = diff === 0;
         const pp = offset(this.picks[this.picks.length - 1].getCenter(), 0, -2);
         const text = randomCell([
             'PURRFECT!',
@@ -152,11 +156,18 @@ export class Scene extends Container {
             'MEOWRVELOUS!',
             'FURFECT!'
         ]);
-        this.add(new TextPop(this.game, perfect ? text : `${this.target.value - sum}`, pp, perfect ? 'yellow' : 'red'));
+        this.add(new TextPop(this.game, perfect ? text : 'MISTAKE', pp, perfect ? 'yellow' : 'red', 20));
         if (perfect) this.game.audio.done();
-        else this.game.audio.bad();
+        else {
+            this.game.audio.bad();
+            setTimeout(() => {
+                this.game.audio.bad();
+                this.add(new TextPop(this.game, `${this.target.value - sum}`, pp, 'red'));
+            }, 300);
+        }
         this.picks.reverse();
         this.cats.forEach(c => c.moved = false);
+        this.life.change(-diff);
         this.picks.forEach((t, i) => {
             setTimeout(() => {
                 this.game.audio.score(i);
@@ -173,7 +184,7 @@ export class Scene extends Container {
                 if (t.cat) {
                     this.hopCat(t.cat, t);
                 }
-            }, i * 120 + 300);
+            }, i * 120 + 300 + (perfect ? 0 : 500));
         });
         setTimeout(() => {
             const appearing = this.tiles.filter(t => t.hidden && this.picks.some(p => p.isClose(t)));
