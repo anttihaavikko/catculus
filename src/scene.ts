@@ -1,4 +1,5 @@
 import { Cat, catPathLandscape, catPathPortrait } from './cat';
+import { COLORS } from './colors';
 import { Container } from './engine/container';
 import { Game } from './engine/game';
 import { LineParticle } from './engine/line';
@@ -8,7 +9,9 @@ import { random, randomCell } from './engine/random';
 import { TextEntity } from './engine/text';
 import { offset, ZERO } from './engine/vector';
 import { WobblyText } from './engine/wobbly';
+import { Multiplier } from './multiplier';
 import { TextPop } from './pop';
+import { Target } from './target';
 import { Tile } from './tile';
 
 export const GRID_SIZE = 7;
@@ -23,31 +26,34 @@ const helpTexts = [
 export class Scene extends Container {
     private tiles: Tile[];
     private picks: Tile[] = [];
-    private target: number;
     private level: number = 0;
     private locked: boolean;
-    private targetLabel: TextEntity;
     private sumLabel: TextEntity;
     private cats: Cat[] = [];
     private catPath = catPathLandscape;
     private scoreLabel: TextEntity;
     private score: number = 0;
     private helpTexts: WobblyText[];
+    private target: Target;
+    private multi: Multiplier;
     
     constructor(game: Game) {
         super(game);
 
         this.tiles = Array.from(Array(GRID_SIZE * GRID_SIZE)).map((_, i) => new Tile(game, i));
 
-        this.targetLabel = new TextEntity(game, '', 50, 500, 220, -1, ZERO, { shadow: 5 });
         this.sumLabel = new WobblyText(game, '', 25, 400, 30, 0.5, 3, { shadow: 3 });
         this.scoreLabel = new TextEntity(game, '0', 40, 790, 40, -1, ZERO, { shadow: 3, align: 'right' });
         this.helpTexts = [
             new WobblyText(game, '', 30, 500, 50, 0.25, 2.5, { shadow: 3, scales: true }),
             new WobblyText(game, '', 30, 500, 80, 0.25, 2.5, { shadow: 3, scales: true }),
         ];
+        this.target = new Target(game, 500, 220);
+        this.multi = new Multiplier(game, 765, 73);
+        
+        this.helpTexts.forEach(ht => ht.d = 500);
 
-        this.add(...this.tiles, this.targetLabel, this.sumLabel, this.scoreLabel, ...this.helpTexts);
+        this.add(...this.tiles, this.sumLabel, this.scoreLabel, ...this.helpTexts, this.target, this.multi);
 
         this.findTarget();
         // this.addCat();
@@ -90,7 +96,7 @@ export class Scene extends Container {
                 const shownSum = this.picks.some(t => t.cat) ? '???' : `${sum}`;
                 this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.getVisibleValue()).join('+')}=${shownSum}` : '';
 
-                if (sum >= this.target) {
+                if (sum >= this.target.value) {
                     this.scoreRound(sum);
                     mouse.x = -9999;
                 }
@@ -110,19 +116,21 @@ export class Scene extends Container {
     
     public ratioChanged(portrait: boolean): void {
         this.tiles.forEach((t, i) => t.moveTo(i, portrait ? 45 : 50, portrait ? 400 : 45));
-        this.targetLabel.p = portrait ? { x: 200, y: 320 } : { x: 550, y: 220 };
-        this.sumLabel.p = { x: portrait ? 200 : 400, y: portrait ? 120 : 40 };
+        this.target.p = portrait ? { x: 200, y: 320 } : { x: 550, y: 270 };
+        this.sumLabel.p = { x: portrait ? 200 : 400, y: portrait ? 150 : 40 };
         this.catPath = portrait ? catPathPortrait : catPathLandscape;
         this.scoreLabel.p = portrait ? { x: 390, y: 40 } : { x: 790, y: 40 };
+        this.multi.p = portrait ? { x: 365, y: 75 } : { x: 765, y: 73 };
+        this.helpTexts.forEach((ht, i) => ht.p = portrait ? { x: 200, y: 200 + i * 35 } : { x: 550, y: 160 + i * 35});
         // this.scoreLabel.setOptions({ align: portrait ? 'center' : 'right'});
-        this.helpTexts.forEach((ht, i) => ht.p = portrait ? { x: 200, y: 200 + i * 35 } : { x: 550, y: 110 + i * 35});
     }
 
     private scoreRound(sum: number): void {
+        this.multi.paused = true;
         this.clearHelp();
         this.locked = true;
         this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.value).join('+')}=${sum}` : '';
-        const perfect = sum === this.target;
+        const perfect = sum === this.target.value;
         const pp = offset(this.picks[this.picks.length - 1].getCenter(), 0, -2);
         const text = randomCell([
             'PURRFECT!',
@@ -131,7 +139,7 @@ export class Scene extends Container {
             'MEOWRVELOUS!',
             'FURFECT!'
         ]);
-        this.add(new TextPop(this.game, perfect ? text : `${this.target - sum}`, pp, perfect ? 'yellow' : 'red'));
+        this.add(new TextPop(this.game, perfect ? text : `${this.target.value - sum}`, pp, perfect ? 'yellow' : 'red'));
         if (perfect) this.game.audio.done();
         else this.game.audio.bad();
         this.picks.reverse();
@@ -145,7 +153,7 @@ export class Scene extends Container {
                 }
                 if (i < this.picks.length - 1) t.nudge(this.picks[i + 1].p);
                 t.picked = false;
-                const amount = t.value * (i + 1) * (t.cat ? 2 : 1);
+                const amount = t.value * (i + 1) * (t.cat ? 2 : 1) * this.multi.value;
                 this.score += amount;
                 this.scoreLabel.content = asScore(this.score);
                 this.add(new TextPop(this.game, asScore(amount), t.getCenter(), t.cat ? 'yellow' : '#fff'));
@@ -171,8 +179,9 @@ export class Scene extends Container {
     private findTarget(): void {
         this.showHelp();
         this.level++;
-        this.target = this.generateTarget(this.level + 1);
-        this.targetLabel.content = this.target.toString();
+        this.multi.paused = false;
+        this.multi.reset(Math.min(13, this.level));
+        this.target.set(this.generateTarget(this.level + 1));
     }
 
     private generateTarget(count: number): number {
@@ -215,7 +224,7 @@ export class Scene extends Container {
 
     public draw(ctx: CanvasRenderingContext2D): void {
         ctx.save();
-        ctx.fillStyle = '#453A49';
+        ctx.fillStyle = COLORS.bg;
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         super.draw(ctx);
         ctx.restore();
