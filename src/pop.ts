@@ -8,6 +8,7 @@ import { TILE_SIZE } from './tile';
 export class TextPop extends TextEntity {
     constructor(game: Game, text: string, pos: Vector) {
         super(game, text, 30, pos.x + TILE_SIZE * 0.5, pos.y + TILE_SIZE * 0.25, random(0.7, 0.9), { x: 0, y: random(-0.5, -0.7) }, { shadow: 3, scales: true });
+        this.d = 200;
     }
 
     public update(tick: number, mouse: Mouse): void {
