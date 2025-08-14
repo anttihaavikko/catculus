@@ -64,11 +64,10 @@ export class Tile extends Entity {
     }
 
     public nudge(target: Vector): void {
-        const dir = normalize({
+        this.nudgeDir = normalize({
             x: target.x - this.p.x,
             y: target.y - this.p.y
         });
-        this.nudgeDir = { x: -dir.x * 5, y: -dir.y * 5 };
     }
 
     public isClose(other: Tile): boolean {
@@ -91,9 +90,10 @@ export class Tile extends Entity {
         ctx.strokeStyle = outline;
         ctx.beginPath();
         ctx.lineWidth = 7;
-        ctx.translate(this.p.x + this.nudgeDir.x * this.pulser.ratio, this.p.y + this.nudgeDir.y * this.pulser.ratio);
+        const distance = -5;
+        ctx.translate(this.p.x + this.nudgeDir.x * this.pulser.ratio * distance, this.p.y + this.nudgeDir.y * this.pulser.ratio * distance);
         ctx.translate(this.s.x * 0.5, this.s.y * 0.5);
-        ctx.scale(this.scale.x + this.pulser.ratio * 0.15, this.scale.y + this.pulser.ratio * 0.15);
+        ctx.scale(this.scale.x + this.pulser.ratio * 0.12, this.scale.y + this.pulser.ratio * 0.12);
         ctx.translate(-this.s.x * 0.5, -this.s.y * 0.5);
         ctx.rect(0, 0, this.s.x, this.s.y);
         ctx.stroke();

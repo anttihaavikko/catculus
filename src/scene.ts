@@ -81,6 +81,15 @@ export class Scene extends Container {
         this.locked = true;
         this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.value).join('+')}=${sum}` : '';
         console.log(`DONE, DIFF: ${sum - this.target}`);
+        const perfect = sum === this.target;
+        const pp = offset(this.picks[this.picks.length - 1].getCenter(), 0, -10);
+        const text = randomCell([
+            'PURRFECT!',
+            'PAWFECT!',
+            'PAWLESS!',
+            'MEOWRVELOUS!'
+        ]);
+        this.add(new TextPop(this.game, perfect ? text : `${this.target - sum}`, pp, perfect ? 'yellow' : 'red'));
         this.picks.reverse();
         this.cats.forEach(c => c.moved = false);
         this.picks.forEach((t, i) => {
@@ -93,7 +102,7 @@ export class Scene extends Container {
                 if (i < this.picks.length - 1) t.nudge(this.picks[i + 1].p);
                 t.picked = false;
                 const amount = t.value * (i + 1) * (t.cat ? 2 : 1);
-                this.add(new TextPop(this.game, amount.toString(), t.p, t.cat ? 'yellow' : '#fff'));
+                this.add(new TextPop(this.game, amount.toString(), t.getCenter(), t.cat ? 'yellow' : '#fff'));
                 if (t.cat) {
                     this.hopCat(t.cat, t);
                 }
