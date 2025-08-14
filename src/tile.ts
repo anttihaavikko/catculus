@@ -40,6 +40,7 @@ export class Tile extends Entity {
             x: x + xx * (TILE_SIZE + TILE_GAP),
             y: y + yy * (TILE_SIZE + TILE_GAP)
         };
+        if (this.cat) this.cat.p = this.getCenter();
     }
 
     public getVisibleValue(): string {
