@@ -71,7 +71,7 @@ export class Scene extends Container {
     
     public ratioChanged(portrait: boolean): void {
         this.tiles.forEach((t, i) => t.moveTo(i, portrait ? 40 : 50, portrait ? 400 : 45));
-        this.targetLabel.p = portrait ? { x: 200, y: 320 } : { x: 500, y: 220 };
+        this.targetLabel.p = portrait ? { x: 200, y: 320 } : { x: 550, y: 220 };
         this.sumLabel.p = { x: portrait ? 200 : 400, y: 40 };
         this.catPath = portrait ? catPathPortrait : catPathLandscape;
     }
@@ -87,7 +87,8 @@ export class Scene extends Container {
             'PURRFECT!',
             'PAWFECT!',
             'PAWLESS!',
-            'MEOWRVELOUS!'
+            'MEOWRVELOUS!',
+            'FURFECT!'
         ]);
         this.add(new TextPop(this.game, perfect ? text : `${this.target - sum}`, pp, perfect ? 'yellow' : 'red'));
         this.picks.reverse();

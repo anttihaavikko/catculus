@@ -25,7 +25,7 @@ document.body.appendChild(canvas);
 let ratio = 1;
 let x = 0;
 let y = 0;
-let wasPortrait = false;
+let wasPortrait: boolean = null;
 
 const resize = () => {
     const portrait = window.innerHeight > window.innerWidth;
