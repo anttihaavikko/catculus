@@ -24,7 +24,7 @@ export class Intro extends Container {
             tile.p = { x: i * (TILE_SIZE + TILE_GAP) + 220, y: 120 };
             return tile;
         });
-        this.button = new ButtonEntity(game, 'PLAY', 400, 320, 200, 70, () => {
+        this.button = new ButtonEntity(game, 'PLAY', 400, 320, 260, 70, () => {
             game.changeScene(new Scene(game));
         }, this.game.audio, 35);
         
@@ -59,9 +59,9 @@ export class Intro extends Container {
     }
 
     public ratioChanged(portrait: boolean): void {
-        this.button.p = portrait ? { x: 100, y: 500 } : { x: 300, y: 300 };
+        this.button.p = portrait ? { x: 70, y: 420 } : { x: 260, y: 280 };
         this.logoX = portrait ? -140 : -200;
-        this.logoY = portrait ? 150 : -50;
+        this.logoY = portrait ? 220 : -50;
         this.logoScale = portrait ? 0.85 : 1.5;
     }
 

@@ -1,5 +1,4 @@
 import { Cat, catPathLandscape, catPathPortrait } from './cat';
-import { COLORS } from './colors';
 import { drawBg } from './common';
 import { font } from './engine/constants';
 import { Container } from './engine/container';
