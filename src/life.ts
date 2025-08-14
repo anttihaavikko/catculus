@@ -1,3 +1,4 @@
+import { font } from './engine/constants';
 import { Entity } from './engine/entity';
 import { Game } from './engine/game';
 import { TextEntity } from './engine/text';
@@ -6,6 +7,7 @@ import { ZERO } from './engine/vector';
 export class Life extends Entity {
     private amount: number = 9;
     private text: TextEntity;
+    private offset: number;
 
     constructor(game: Game, x: number, y: number, w: number, h: number) {
         super(game, x, y, w, h);
@@ -21,17 +23,23 @@ export class Life extends Entity {
     }
 
     public changeSize(portrait: boolean): void {
-        this.s = portrait ? { x: 380 - 65, y: 20 } : { x: 200, y: 20 };
+        this.s = portrait ? { x: 380 - this.getWidth(), y: 20 } : { x: 200, y: 20 };
+    }
+
+    private getWidth(): number {
+        const ctx = this.game.canvas.getContext('2d');
+        ctx.font = `15px ${font}`;
+        return ctx.measureText(this.text.content).width + 7;
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
         ctx.save();
         ctx.lineWidth = 2;
         ctx.translate(this.p.x, this.p.y);
-        
+
         this.text.draw(ctx);
 
-        ctx.translate(65, 0);
+        ctx.translate(this.getWidth(), 0);
 
         ctx.fillStyle = '#000';
         ctx.strokeStyle = '#fff';
