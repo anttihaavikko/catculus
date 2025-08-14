@@ -52,32 +52,40 @@ export class Scene extends Container {
                 this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.getVisibleValue()).join('+')}=${shownSum}` : '';
 
                 if (sum >= this.target) {
-                    this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.value).join('+')}=${sum}` : '';
-                    console.log(`DONE, DIFF: ${sum - this.target}`);
-                    this.picks.sort((a, b) => a.value - b.value).forEach((t, i) => {
-                        setTimeout(() => {
-                            const amount = t.value * this.picks.length * (t.cat ? 2 : 1);
-                            this.add(new TextPop(this.game, amount.toString(), t.p));
-                            if (t.cat) {
-                                this.hopCat(t.cat);
-                                t.cat = null;
-                            }
-                        }, i * 75);
-                    });
-                    setTimeout(() => {
-                        this.tiles.filter(t => t.hidden && this.picks.some(p => p.isClose(t))).forEach(t => t.appear());
-                        this.picks.forEach(t => {
-                            t.picked = false;
-                            t.value++;
-                        });
-                        this.picks = [];
-                        this.findTarget();
-                        this.sumLabel.content = '';
-                        this.addCat();
-                    }, 1000);
+                    this.scoreRound(sum);
                 }
             }
         }
+    }
+
+    private scoreRound(sum: number): void {
+        this.game.audio.done();
+        this.locked = true;
+        this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.value).join('+')}=${sum}` : '';
+        console.log(`DONE, DIFF: ${sum - this.target}`);
+        this.picks.sort((a, b) => a.value - b.value).forEach((t, i) => {
+            setTimeout(() => {
+                this.game.audio.score(i);
+                const amount = t.value * this.picks.length * (t.cat ? 2 : 1);
+                this.add(new TextPop(this.game, amount.toString(), t.p));
+                if (t.cat) {
+                    this.hopCat(t.cat);
+                    t.cat = null;
+                }
+            }, i * 120 + 300);
+        });
+        setTimeout(() => {
+            this.tiles.filter(t => t.hidden && this.picks.some(p => p.isClose(t))).forEach(t => t.appear());
+            this.picks.forEach(t => {
+                t.picked = false;
+                t.value++;
+            });
+            this.picks = [];
+            this.findTarget();
+            this.sumLabel.content = '';
+            this.addCat();
+            this.locked = false;
+        }, 1000);
     }
 
     private findTarget(): void {
@@ -96,6 +104,7 @@ export class Scene extends Container {
     }
 
     private toggle(tile: Tile): void {
+        this.game.audio.pick();
         if (this.picks.includes(tile)) {
             this.picks = this.picks.filter(t => t !== tile);
             return;

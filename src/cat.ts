@@ -85,5 +85,6 @@ export class Cat extends Entity {
 
     public hop(to: Vector): void {
         this.tween.move(to, 0.4);
+        this.game.audio.jump();
     }
 }
