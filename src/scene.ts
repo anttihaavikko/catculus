@@ -90,7 +90,6 @@ export class Scene extends Container {
     }
 
     private scoreRound(sum: number): void {
-        this.game.audio.done();
         this.locked = true;
         this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.value).join('+')}=${sum}` : '';
         console.log(`DONE, DIFF: ${sum - this.target}`);
@@ -104,6 +103,8 @@ export class Scene extends Container {
             'FURFECT!'
         ]);
         this.add(new TextPop(this.game, perfect ? text : `${this.target - sum}`, pp, perfect ? 'yellow' : 'red'));
+        if (perfect) this.game.audio.done();
+        else this.game.audio.bad();
         this.picks.reverse();
         this.cats.forEach(c => c.moved = false);
         this.picks.forEach((t, i) => {
