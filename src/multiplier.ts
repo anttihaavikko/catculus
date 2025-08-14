@@ -21,6 +21,7 @@ export class Multiplier extends Container {
     }
     
     public reset(val: number): void {
+        this.ratio = 0;
         this.value = val;
         this.text.content = `x${this.value}`;
     }
