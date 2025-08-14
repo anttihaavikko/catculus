@@ -1,4 +1,4 @@
-import { Cat } from './cat';
+import { Cat, catPathLandscape, catPathPortrait } from './cat';
 import { Container } from './engine/container';
 import { Game } from './engine/game';
 import { Mouse } from './engine/mouse';
@@ -20,6 +20,7 @@ export class Scene extends Container {
     private targetLabel: TextEntity;
     private sumLabel: TextEntity;
     private cats: Cat[] = [];
+    private catPath = catPathLandscape;
     
     constructor(game: Game) {
         super(game);
@@ -33,6 +34,10 @@ export class Scene extends Container {
 
         this.findTarget();
         // this.addCat();
+
+        const cat = new Cat(this.game, 50, 50);
+        setTimeout(() => cat.sleep(true), 500);
+        this.add(cat);
     }
     
     public update(tick: number, mouse: Mouse): void {
@@ -63,6 +68,7 @@ export class Scene extends Container {
         this.tiles.forEach((t, i) => t.moveTo(i, portrait ? 40 : 50, portrait ? 400 : 45));
         this.targetLabel.p = portrait ? { x: 200, y: 320 } : { x: 500, y: 220 };
         this.sumLabel.p = { x: portrait ? 200 : 400, y: 40 };
+        this.catPath = portrait ? catPathPortrait : catPathLandscape;
     }
 
     private scoreRound(sum: number): void {
@@ -71,6 +77,7 @@ export class Scene extends Container {
         this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.value).join('+')}=${sum}` : '';
         console.log(`DONE, DIFF: ${sum - this.target}`);
         this.picks.reverse();
+        this.cats.forEach(c => c.moved = false);
         this.picks.forEach((t, i) => {
             setTimeout(() => {
                 this.game.audio.score(i);
@@ -94,6 +101,7 @@ export class Scene extends Container {
             this.sumLabel.content = '';
             this.addCat();
             this.locked = false;
+            this.cats.filter(c => !c.moved).forEach(c => c.sleep(true));
         }, 800 + this.picks.length * 120);
     }
 
@@ -124,12 +132,12 @@ export class Scene extends Container {
     
     private addCat(): void {
         if (!this.tiles.some(t => !t.hidden && !t.cat)) return;
-        const cat = new Cat(this.game, 900, 320);
+        const cat = new Cat(this.game, this.catPath[0].x, this.catPath[0].y);
         this.cats.push(cat);
         this.add(cat);
-        cat.hop({ x: 700, y: 320 });
-        setTimeout(() => cat.hop({ x: 500, y: 300 }), 1000);
-        setTimeout(() => cat.hop({ x: 400, y: 220 }), 1700);
+        cat.hop({ x: this.catPath[1].x, y: this.catPath[1].y });
+        setTimeout(() => cat.hop({ x: this.catPath[2].x, y: this.catPath[2].y }), 1000);
+        setTimeout(() => cat.hop({ x: this.catPath[3].x, y: this.catPath[3].y }), 1700);
         setTimeout(() => this.hopCat(cat), 2600);
     }
 

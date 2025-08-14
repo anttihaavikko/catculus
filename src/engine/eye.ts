@@ -1,4 +1,4 @@
-import { drawEllipse } from './drawing';
+import { drawEllipse, fillRect } from './drawing';
 import { Entity } from './entity';
 import { Game } from './game';
 import { moveTowards } from './math';
@@ -31,10 +31,12 @@ export class Eye extends Entity {
         this.s = { x: size, y: size };
     }
 
-    public draw(ctx: CanvasRenderingContext2D): void {
+    public draw(ctx: CanvasRenderingContext2D, sleeping?: boolean): void {
         const prev = ctx.globalCompositeOperation;
         ctx.globalCompositeOperation = 'source-over';
-        drawEllipse(ctx, this.p, this.s.x * Math.min(1.1, 1 / this.openess), this.s.y * this.openess, this.color);
+        ctx.fillStyle = this.color;
+        if (!sleeping) drawEllipse(ctx, this.p, this.s.x * Math.min(1.1, 1 / this.openess), this.s.y * this.openess, this.color);
+        if (sleeping) fillRect(ctx, this.p.x, this.p.y + 6, 20, 7);
         ctx.globalCompositeOperation = prev;
     }
 

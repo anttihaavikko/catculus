@@ -38,6 +38,7 @@ const defaultOptions: FaceOptions = {
 
 export class Face extends Entity {
     public angry: boolean;
+    public sleeping: boolean;
     // public thinking: boolean;
 
     private openess = 0;
@@ -111,8 +112,8 @@ export class Face extends Entity {
 
         ctx.fillStyle = '#000';
 
-        this.left.draw(ctx);
-        this.right.draw(ctx);
+        this.left.draw(ctx, this.sleeping);
+        this.right.draw(ctx, this.sleeping);
 
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
