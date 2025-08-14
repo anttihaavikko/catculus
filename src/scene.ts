@@ -83,7 +83,7 @@ export class Scene extends Container {
                 this.game.audio.score(i);
                 t.pulse(0.8);
                 const amount = t.value * this.picks.length * (t.cat ? 2 : 1);
-                this.add(new TextPop(this.game, amount.toString(), t.p));
+                this.add(new TextPop(this.game, amount.toString(), t.p, !!t.cat));
                 if (t.cat) {
                     this.hopCat(t.cat);
                     t.cat = null;
