@@ -1,5 +1,6 @@
 import { Cat, catPathLandscape, catPathPortrait } from './cat';
 import { COLORS } from './colors';
+import { font } from './engine/constants';
 import { Container } from './engine/container';
 import { Game } from './engine/game';
 import { LineParticle } from './engine/line';
@@ -40,6 +41,7 @@ export class Scene extends Container {
     private holdMask: boolean;
     private prev: Tile;
     private life: Life;
+    private sumLimit: number;
     
     constructor(game: Game) {
         super(game);
@@ -102,9 +104,9 @@ export class Scene extends Container {
                 this.toggle(tile);
 
                 const sum = this.picks.reduce((acc, t) => acc + t.value, 0);
-                // const knownSum = this.picks.reduce((acc, t) => acc + (t.cat ? 0 : t.value), 0);
-                const shownSum = this.picks.some(t => t.cat) ? '???' : `${sum}`;
-                this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.getVisibleValue()).join('+')}=${shownSum}` : '';
+                const knownSum = this.picks.reduce((acc, t) => acc + (t.cat ? 0 : t.value), 0);
+                const shownSum = this.picks.some(t => t.cat) ? `${knownSum}?` : `${sum}`;
+                this.showSum(this.picks.length > 1 ? `${this.picks.map(t => t.getVisibleValue()).join('+')}=${shownSum}` : '');
 
                 if (sum >= this.target.value) {
                     mouse.x = -9999;
@@ -118,6 +120,23 @@ export class Scene extends Container {
         }
         this.holdMask = null;
         this.prev = null;
+    }
+
+    private showSum(sum: string): void {
+        const ctx = this.game.canvas.getContext('2d');
+        const parts = sum.split('+');
+        if (parts.length > 3) {
+            for (let i = 0; i < parts.length - 1; i++) {
+                const cur = [...parts.slice(0, i), parts[parts.length - 1]];
+                ctx.font = `25px ${font}`;
+                if (ctx.measureText(cur.join('+')).width > this.sumLimit) {
+                    const half = Math.floor(cur.length / 2);
+                    this.sumLabel.content = [...cur.slice(0, half), '...', ...cur.slice(half)].join('+');
+                    return;
+                }
+            }
+        }
+        this.sumLabel.content = sum;
     }
 
     private showHelp(): void {
@@ -140,6 +159,8 @@ export class Scene extends Container {
         this.helpTexts.forEach((ht, i) => ht.p = portrait ? { x: 200, y: 200 + i * 35 } : { x: 550, y: 160 + i * 35});
         this.life.p = portrait ? { x: 10, y: 770 } : { x: 10, y: 10 };
         this.life.changeSize(portrait);
+        this.sumLimit = portrait ? 250 : 700;
+        document.body.style.background = portrait ? COLORS.bg : '#000';
         // this.scoreLabel.setOptions({ align: portrait ? 'center' : 'right'});
     }
 
@@ -147,7 +168,7 @@ export class Scene extends Container {
         this.multi.paused = true;
         this.clearHelp();
         this.locked = true;
-        this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.value).join('+')}=${sum}` : '';
+        this.showSum(this.picks.length > 1 ? `${this.picks.map(t => t.value).join('+')}=${sum}` : '');
         const diff = sum - this.target.value;
         const perfect = diff === 0;
         const pp = offset(this.picks[this.picks.length - 1].getCenter(), 0, -2);
