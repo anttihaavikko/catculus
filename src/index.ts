@@ -77,7 +77,6 @@ document.onmousedown = canvas.ontouchstart = () => {
 
 document.onmouseup = canvas.ontouchcancel = canvas.ontouchend = () => {
     mouse.holding = false;
-    mouse.x = -9999;
 };
 
 const tick = (t: number) => {
