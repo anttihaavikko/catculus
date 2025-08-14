@@ -154,9 +154,20 @@ export class Scene extends Container {
             'PAWFECT!',
             'PAWLESS!',
             'MEOWRVELOUS!',
-            'FURFECT!'
+            'FURFECT!',
+            'CATEMPLARY!',
+            'FELICCIMO!',
+            'RADICLAW!'
         ]);
-        const badText = randomCell(['MEOWSTAKE!', 'PURROR!']);
+        const badText = randomCell([
+            'MEOWSTAKE!',
+            'PURROR!',
+            'MEOWSCALCULATION!',
+            'MEOWSSTEP!',
+            'FURROR!',
+            'CATASTROPHE!',
+            'MEOWSERABLE!'
+        ]);
         this.add(new TextPop(this.game, perfect ? winText : badText, pp, perfect ? 'yellow' : 'red', 20));
         if (perfect) this.game.audio.done();
         else {
@@ -188,6 +199,16 @@ export class Scene extends Container {
             }, i * 120 + 300 + (perfect ? 0 : 500));
         });
         setTimeout(() => {
+
+            if (this.life.isDead()) {
+                setTimeout(() => {
+                    this.helpTexts[0].toggle('|GAME OVER|!');
+                    this.helpTexts[1].toggle(`Final score: |${asScore(this.score)}`);
+                    this.game.audio.bad();
+                }, 500);
+                return;
+            }
+
             const appearing = this.tiles.filter(t => t.hidden && this.picks.some(p => p.isClose(t)));
             if (appearing.length > 0) this.game.audio.appear();
             appearing.forEach(t => t.appear());
