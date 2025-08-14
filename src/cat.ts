@@ -61,7 +61,7 @@ export class Cat extends Entity {
         // tail
         ctx.lineWidth = 5;
         ctx.moveTo(0, 0);
-        ctx.quadraticCurveTo(-this.animationPhase * 25, -5, -this.animationPhase * 12, -25);
+        ctx.quadraticCurveTo(-this.animationPhase * 25, -5, -this.animationPhase * 12, -20 - this.animationPhaseAbs * 5);
         ctx.stroke();
         
         const drawEar = (dir: number) => {
