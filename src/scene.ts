@@ -1,6 +1,7 @@
 import { Cat, catPathLandscape, catPathPortrait } from './cat';
 import { COLORS } from './colors';
 import { Container } from './engine/container';
+import { drawCircle } from './engine/drawing';
 import { Game } from './engine/game';
 import { LineParticle } from './engine/line';
 import { asScore } from './engine/math';
@@ -240,5 +241,8 @@ export class Scene extends Container {
         ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         super.draw(ctx);
         ctx.restore();
+        
+        // ctx.lineWidth = 5;
+        // drawCircle(ctx, this.game.getMouse(), 10, 'transparent', '#000');
     }
 }

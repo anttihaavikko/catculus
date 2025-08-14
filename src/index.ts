@@ -9,6 +9,8 @@ export const WIDTH = 800 * upScale;
 export const HEIGHT = 400 * upScale;
 
 const canvas: HTMLCanvasElement = document.createElement('canvas');
+canvas.style.userSelect = 'none';
+canvas.style.touchAction = 'none';
 const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
 const mouse: Mouse = { x: 0, y: 0 };
 const audio = new AudioManager(false, false, false);
@@ -52,7 +54,7 @@ const move = (x: number, y: number): void => {
 };
 
 document.onmousemove = (e: MouseEvent) => move(e.offsetX, e.offsetY);
-document.ontouchmove = (e: TouchEvent) => move(e.touches[0].clientX, e.touches[0].clientY);
+canvas.ontouchmove = (e: TouchEvent) => move(e.touches[0].clientX / ratio - x, e.touches[0].clientY / ratio - y);
 
 window.onkeydown = (e: KeyboardEvent) => {
     audio.startMusic();
@@ -65,7 +67,7 @@ window.onkeyup = (e: KeyboardEvent) => game.released(e);
 //     e.preventDefault();
 // };
 
-document.onmousedown = document.ontouchstart = () => {
+document.onmousedown = canvas.ontouchstart = () => {
     audio.startMusic();
     mouse.pressing = true;
     mouse.holding = true;
@@ -73,7 +75,7 @@ document.onmousedown = document.ontouchstart = () => {
     // setTimeout(() => mouse.x = -999, 100);
 };
 
-document.onmouseup = document.ontouchcancel = () => {
+document.onmouseup = canvas.ontouchcancel = canvas.ontouchend = () => {
     mouse.holding = false;
     mouse.x = -9999;
 };
