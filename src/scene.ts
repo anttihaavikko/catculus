@@ -36,13 +36,15 @@ export class Scene extends Container {
     private helpTexts: WobblyText[];
     private target: Target;
     private multi: Multiplier;
+    private holdMask: boolean;
+    private prev: Tile;
     
     constructor(game: Game) {
         super(game);
 
         this.tiles = Array.from(Array(GRID_SIZE * GRID_SIZE)).map((_, i) => new Tile(game, i));
 
-        this.sumLabel = new WobblyText(game, '', 25, 400, 30, 0.5, 3, { shadow: 3 });
+        this.sumLabel = new WobblyText(game, '', 25, 400, 30, 0.25, 2.5, { shadow: 3 });
         this.scoreLabel = new TextEntity(game, '0', 40, 790, 40, -1, ZERO, { shadow: 3, align: 'right' });
         this.helpTexts = [
             new WobblyText(game, '', 30, 500, 50, 0.25, 2.5, { shadow: 3, scales: true }),
@@ -85,10 +87,14 @@ export class Scene extends Container {
 
         this.game.canvas.style.cursor = this.tiles.some(t => !t.hidden && t.hovered) ? 'pointer' : 'default';
 
-        if (mouse.pressing && !this.locked) {
+        if ((mouse.pressing || mouse.holding) && !this.locked) {
             const tile = this.tiles.find(t => t.hovered);
+            const drag = !mouse.pressing && mouse.holding;
+            if (drag && this?.prev === tile) return;
+            // if (!mouse.pressing && mouse.holding && this.picks.length > 0 && tile?.picked !== this.holdMask) return;
             if (tile && !tile.hidden && (this.picks.length === 0 || this.picks.some(t => t.isClose(tile)))) {
                 tile.picked = !tile.picked;
+                this.holdMask = tile.picked;
                 this.toggle(tile);
 
                 const sum = this.picks.reduce((acc, t) => acc + t.value, 0);
@@ -101,7 +107,12 @@ export class Scene extends Container {
                     mouse.x = -9999;
                 }
             }
+
+            this.prev = tile;
+            return;
         }
+        this.holdMask = null;
+        this.prev = null;
     }
 
     private showHelp(): void {
@@ -115,9 +126,9 @@ export class Scene extends Container {
     }
     
     public ratioChanged(portrait: boolean): void {
-        this.tiles.forEach((t, i) => t.moveTo(i, portrait ? 45 : 50, portrait ? 400 : 45));
+        this.tiles.forEach((t, i) => t.moveTo(i, portrait ? 45 : 50, portrait ? 400 : 30));
         this.target.p = portrait ? { x: 200, y: 320 } : { x: 550, y: 270 };
-        this.sumLabel.p = { x: portrait ? 200 : 400, y: portrait ? 150 : 40 };
+        this.sumLabel.p = { x: portrait ? 200 : 400, y: portrait ? 150 : 380 };
         this.catPath = portrait ? catPathPortrait : catPathLandscape;
         this.scoreLabel.p = portrait ? { x: 390, y: 40 } : { x: 790, y: 40 };
         this.multi.p = portrait ? { x: 365, y: 75 } : { x: 765, y: 73 };
