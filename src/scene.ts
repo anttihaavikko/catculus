@@ -103,8 +103,9 @@ export class Scene extends Container {
                 this.sumLabel.content = this.picks.length > 1 ? `${this.picks.map(t => t.getVisibleValue()).join('+')}=${shownSum}` : '';
 
                 if (sum >= this.target.value) {
-                    this.scoreRound(sum);
                     mouse.x = -9999;
+                    mouse.holding = false;
+                    this.scoreRound(sum);
                 }
             }
 

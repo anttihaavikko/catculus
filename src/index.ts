@@ -46,33 +46,37 @@ window.onresize = resize;
 let isFull = false;
 document.onfullscreenchange = () => isFull = !isFull;
 
-document.onmousemove = (e: MouseEvent) => {
-    mouse.x = (isFull ? (e.offsetX - x) / ratio : e.offsetX) / upScale;
-    mouse.y = (isFull ? (e.offsetY - y) / ratio : e.offsetY) / upScale;
+const move = (x: number, y: number): void => {
+    mouse.x = (isFull ? (x - x) / ratio : x) / upScale;
+    mouse.y = (isFull ? (y - y) / ratio : y) / upScale;
 };
+
+document.onmousemove = (e: MouseEvent) => move(e.offsetX, e.offsetY);
+document.ontouchmove = (e: TouchEvent) => move(e.touches[0].clientX, e.touches[0].clientY);
 
 window.onkeydown = (e: KeyboardEvent) => {
     audio.startMusic();
     game.pressed(e);
 };
 
-window.onkeyup = (e: KeyboardEvent) => {
-    game.released(e);
-};
+window.onkeyup = (e: KeyboardEvent) => game.released(e);
 
-document.oncontextmenu = (e: MouseEvent) => {
-    e.preventDefault();
-};
+// document.oncontextmenu = (e: MouseEvent) => {
+//     e.preventDefault();
+// };
 
-document.onmousedown = (e: MouseEvent) => {
+document.onmousedown = document.ontouchstart = () => {
     audio.startMusic();
     mouse.pressing = true;
     mouse.holding = true;
-    game.click(mouse, e.button === 2);
+    // game.click(mouse, e.button === 2);
     // setTimeout(() => mouse.x = -999, 100);
 };
 
-document.onmouseup = () => mouse.holding = false;
+document.onmouseup = document.ontouchcancel = () => {
+    mouse.holding = false;
+    mouse.x = -9999;
+};
 
 const tick = (t: number) => {
     requestAnimationFrame(tick);
