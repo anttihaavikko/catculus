@@ -52,6 +52,11 @@ export class Tile extends Entity {
         this.pulse(1);
     }
 
+    public increment(): void {
+        this.value++;
+        this.pulse(1);
+    }
+
     public pulse(speed: number): void {
         this.pulser.pulse(speed * 0.6);
     }
@@ -78,7 +83,7 @@ export class Tile extends Entity {
         ctx.lineWidth = 7;
         ctx.translate(this.p.x, this.p.y);
         ctx.translate(this.s.x * 0.5, this.s.y * 0.5);
-        ctx.scale(this.scale.x + this.pulser.ratio * 0.1, this.scale.y + this.pulser.ratio * 0.1);
+        ctx.scale(this.scale.x + this.pulser.ratio * 0.15, this.scale.y + this.pulser.ratio * 0.15);
         ctx.translate(-this.s.x * 0.5, -this.s.y * 0.5);
         ctx.rect(0, 0, this.s.x, this.s.y);
         ctx.stroke();

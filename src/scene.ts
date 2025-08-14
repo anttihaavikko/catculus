@@ -1,8 +1,9 @@
 import { Cat, catPathLandscape, catPathPortrait } from './cat';
 import { Container } from './engine/container';
 import { Game } from './engine/game';
+import { LineParticle } from './engine/line';
 import { Mouse } from './engine/mouse';
-import { randomCell } from './engine/random';
+import { random, randomCell } from './engine/random';
 import { TextEntity } from './engine/text';
 import { offset, ZERO } from './engine/vector';
 import { WobblyText } from './engine/wobbly';
@@ -35,9 +36,9 @@ export class Scene extends Container {
         this.findTarget();
         // this.addCat();
 
-        const cat = new Cat(this.game, 50, 50);
-        setTimeout(() => cat.sleep(true), 500);
-        this.add(cat);
+        // const cat = new Cat(this.game, 50, 50);
+        // setTimeout(() => cat.sleep(true), 500);
+        // this.add(cat);
     }
     
     public update(tick: number, mouse: Mouse): void {
@@ -81,7 +82,11 @@ export class Scene extends Container {
         this.picks.forEach((t, i) => {
             setTimeout(() => {
                 this.game.audio.score(i);
-                t.pulse(0.8);
+                if (i > 0) {
+                    this.add(new LineParticle(this.game, this.picks[i - 1].getCenter(), t.getCenter(), 1, 5, 'yellow', random(0, 10)));
+                }
+                t.picked = false;
+                t.pulse(0.6);
                 const amount = t.value * this.picks.length * (t.cat ? 2 : 1);
                 this.add(new TextPop(this.game, amount.toString(), t.p, !!t.cat));
                 if (t.cat) {
@@ -92,10 +97,7 @@ export class Scene extends Container {
         });
         setTimeout(() => {
             this.tiles.filter(t => t.hidden && this.picks.some(p => p.isClose(t))).forEach(t => t.appear());
-            this.picks.forEach(t => {
-                t.picked = false;
-                t.value++;
-            });
+            this.picks.forEach(t => t.increment());
             this.picks = [];
             this.findTarget();
             this.sumLabel.content = '';
