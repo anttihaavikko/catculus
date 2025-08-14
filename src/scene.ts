@@ -124,7 +124,9 @@ export class Scene extends Container {
             }, i * 120 + 300);
         });
         setTimeout(() => {
-            this.tiles.filter(t => t.hidden && this.picks.some(p => p.isClose(t))).forEach(t => t.appear());
+            const appearing = this.tiles.filter(t => t.hidden && this.picks.some(p => p.isClose(t)));
+            if (appearing.length > 0) this.game.audio.appear();
+            appearing.forEach(t => t.appear());
             this.picks.forEach(t => t.increment());
             this.picks = [];
             this.findTarget();
