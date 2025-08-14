@@ -27,7 +27,7 @@ export class Cat extends Entity {
     public draw(ctx: CanvasRenderingContext2D): void {
         ctx.save();
         ctx.translate(this.p.x, this.p.y);
-        drawEllipse(ctx, { x: 0, y: 0 }, 15, 7, '#00000033');
+        drawEllipse(ctx, { x: 0, y: 1 }, 17, 5, '#00000055');
         ctx.strokeStyle = '#000';
         ctx.lineCap = 'round';
 
