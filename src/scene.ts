@@ -138,6 +138,8 @@ export class Scene extends Container {
         this.scoreLabel.p = portrait ? { x: 390, y: 40 } : { x: 790, y: 40 };
         this.multi.p = portrait ? { x: 365, y: 75 } : { x: 765, y: 73 };
         this.helpTexts.forEach((ht, i) => ht.p = portrait ? { x: 200, y: 200 + i * 35 } : { x: 550, y: 160 + i * 35});
+        this.life.p = portrait ? { x: 10, y: 770 } : { x: 10, y: 10 };
+        this.life.changeSize(portrait);
         // this.scoreLabel.setOptions({ align: portrait ? 'center' : 'right'});
     }
 
