@@ -53,14 +53,15 @@ export class Scene extends Container {
 
                 if (sum >= this.target) {
                     this.scoreRound(sum);
+                    mouse.x = -9999;
                 }
             }
         }
     }
     
     public ratioChanged(portrait: boolean): void {
-        this.tiles.forEach((t, i) => t.moveTo(i, portrait ? 50 : 50, portrait ? 400 : 45));
-        this.targetLabel.p = portrait ? { x: 200, y: 200 } : { x: 500, y: 220 };
+        this.tiles.forEach((t, i) => t.moveTo(i, portrait ? 40 : 50, portrait ? 400 : 45));
+        this.targetLabel.p = portrait ? { x: 200, y: 320 } : { x: 500, y: 220 };
         this.sumLabel.p = { x: portrait ? 200 : 400, y: 40 };
     }
 
