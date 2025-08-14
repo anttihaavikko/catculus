@@ -20,15 +20,25 @@ export class Tile extends Entity {
     private pulser = new Pulser();
 
     public constructor(game: Game, i: number) {
-        const size = TILE_SIZE + TILE_GAP;
+        super(game, 0, 0, TILE_SIZE, TILE_SIZE);
+        this.moveTo(i, 50, 45);
         const x = i % GRID_SIZE;
         const y = Math.floor(i / GRID_SIZE);
-        super(game, 50 + x * size, 45 + y * size, TILE_SIZE, TILE_SIZE);
         this.value = x - 1 + (y - 2) * 3;
         if (x < 2 || x > 4 || y < 2 || y > 4) {
             this.value = 1;
             this.hidden = true;
         }
+        this.d = 0;
+    }
+    
+    public moveTo(i: number, x: number, y: number): void {
+        const xx = i % GRID_SIZE;
+        const yy = Math.floor(i / GRID_SIZE);
+        this.p = {
+            x: x + xx * (TILE_SIZE + TILE_GAP),
+            y: y + yy * (TILE_SIZE + TILE_GAP)
+        };
     }
 
     public getVisibleValue(): string {
@@ -39,7 +49,7 @@ export class Tile extends Entity {
         this.hidden = false;
         this.scale = { x: 0, y: 0 };
         this.tween.scale({ x: 1, y: 1 }, 0.3);
-        this.pulse(0.5);
+        this.pulse(1);
     }
 
     public pulse(speed: number): void {
@@ -52,6 +62,7 @@ export class Tile extends Entity {
 
     public update(tick: number, mouse: Mouse): void {
         this.hovered = this.isInside(mouse, 1);
+        this.d = this.hovered ? 1 : 0;
         super.update(tick, mouse);
         this.pulser.update(this.delta * 0.01);
     }
@@ -76,9 +87,7 @@ export class Tile extends Entity {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.font = `20px ${font}`;
-        ctx.translate(this.s.x / 2, this.s.y / 2);
-        ctx.scale(1 + this.pulser.ratio * 0.2, 1 + this.pulser.ratio * 0.2);
-        ctx.fillText(this.value.toString(), 0, 0);
+        ctx.fillText(this.value.toString(), this.s.x / 2, this.s.y / 2);
         ctx.restore();
     }
 }

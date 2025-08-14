@@ -10,6 +10,10 @@ export class Container extends Entity {
         super(game, x, y, 0, 0);
         this.children.push(...entities);
     }
+    
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public ratioChanged(portrait: boolean): void {
+    }
 
     public getBgColor(): string {
         return '#ccc';

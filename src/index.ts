@@ -25,13 +25,19 @@ document.body.appendChild(canvas);
 let ratio = 1;
 let x = 0;
 let y = 0;
+let wasPortrait = false;
 
 const resize = () => {
-    ratio = Math.min(window.innerWidth / WIDTH, window.innerHeight / HEIGHT);
+    const portrait = window.innerHeight > window.innerWidth;
+    canvas.width = !portrait ? WIDTH : HEIGHT;
+    canvas.height = !portrait ? HEIGHT : WIDTH;
+    ratio = Math.min(window.innerWidth / canvas.width, window.innerHeight / canvas.height);
     canvas.style.transformOrigin = 'top left';
-    x = (window.innerWidth - WIDTH * ratio) * 0.5;
-    y = (window.innerHeight - HEIGHT * ratio) * 0.5;
+    x = (window.innerWidth - canvas.width * ratio) * 0.5;
+    y = (window.innerHeight - canvas.height * ratio) * 0.5;
     canvas.style.transform = `translate(${x}px,${y}px) scale(${ratio})`;
+    if (portrait !== wasPortrait) game.scene.ratioChanged(portrait);
+    wasPortrait = portrait;
 };
 
 resize();
