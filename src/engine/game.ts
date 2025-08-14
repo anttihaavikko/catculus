@@ -23,10 +23,10 @@ export class Game extends Entity {
         this.blinders = new Blinders(this, 400);
     }
 
-    public click(mouse: Mouse, right: boolean): void {
+    public click(mouse: Mouse): void {
         this.usingPad = false;
         this.scene?.getButtons().forEach(b => {
-            if (b.visible && b.isInside(mouse)) b.trigger(right);
+            if (b.visible && b.isInside(mouse)) b.trigger(false);
         });
     }
 
@@ -75,12 +75,13 @@ export class Game extends Entity {
         ctx.translate(this.camera.offset.x - this.camera.pan.x + this.camera.shift, this.camera.offset.y + this.camera.pan.y);
         this.scene?.draw(ctx);
         ctx.restore();
-        // this.blinders.draw(ctx);
+        this.blinders.draw(ctx);
     }
 
     public changeScene(scene: Container): void {
         this.blinders.close(() => {
             this.scene = scene;
+            scene.ratioChanged(window.innerHeight > window.innerWidth);
             this.blinders.open();
         });
     }

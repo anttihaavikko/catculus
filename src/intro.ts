@@ -1,0 +1,77 @@
+import { Cat } from './cat';
+import { drawBg } from './common';
+import { ButtonEntity } from './engine/button';
+import { Container } from './engine/container';
+import { Game } from './engine/game';
+import { Mouse } from './engine/mouse';
+import { WobblyText } from './engine/wobbly';
+import { Scene } from './scene';
+import { Tile, TILE_GAP, TILE_SIZE } from './tile';
+
+export class Intro extends Container {
+    private tiles: Tile[];
+    private button: ButtonEntity;
+    private cats: Cat[] = [];
+    private logoX: number;
+    private logoY: number;
+    private logoScale: number;
+
+    constructor(game: Game) {
+        super(game);
+        // document.body.style.backgroundColor = COLORS.bg;
+        this.tiles = 'CAT GAME'.split('').map((c, i) => {
+            const tile = new Tile(game, i, true, c);
+            tile.p = { x: i * (TILE_SIZE + TILE_GAP) + 220, y: 120 };
+            return tile;
+        });
+        this.button = new ButtonEntity(game, 'PLAY', 400, 320, 200, 70, () => {
+            game.changeScene(new Scene(game));
+        }, this.game.audio, 35);
+        
+        this.addCat(this.tiles[0], -TILE_SIZE - TILE_GAP);
+        this.addCat(this.tiles[this.tiles.length - 1], TILE_SIZE + TILE_GAP);
+        this.addCat(this.tiles[3], 0);
+
+        this.cats[0].sleep(true);
+        this.cats[1].sleep(true);
+        
+        this.add(
+            new WobblyText(game, 'Antti Haavikko presents', 18, 400, 105, 0.25, 1.5, { shadow : 3 }),
+            new WobblyText(game, 'Made for js13k 2025', 12, 400, 182, 0.2, 1.5, { shadow : 2 }),
+            ...this.tiles,
+            // this.button, 
+            ...this.cats,
+        );
+    }
+    
+    public getButtons(): ButtonEntity[] {
+        return [this.button];
+    }
+
+    public update(tick: number, mouse: Mouse): void {
+        super.update(tick, mouse);
+        this.button.update(tick, mouse);
+    }
+    
+    private addCat(tile: Tile, offset: number): void {
+        const p = tile.getCenter();
+        this.cats.push(new Cat(this.game, p.x + offset, p.y));
+    }
+
+    public ratioChanged(portrait: boolean): void {
+        this.button.p = portrait ? { x: 100, y: 500 } : { x: 300, y: 300 };
+        this.logoX = portrait ? -140 : -200;
+        this.logoY = portrait ? 150 : -50;
+        this.logoScale = portrait ? 0.85 : 1.5;
+    }
+
+    public draw(ctx: CanvasRenderingContext2D): void {
+        drawBg(ctx);
+        ctx.save();
+        ctx.translate(this.logoX, this.logoY);
+        ctx.scale(this.logoScale, this.logoScale);
+        super.draw(ctx);
+        ctx.restore();
+        this.button.draw(ctx);
+    }
+}

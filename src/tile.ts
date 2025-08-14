@@ -20,11 +20,12 @@ export class Tile extends Entity {
     private pulser = new Pulser();
     private nudgeDir: Vector = { x: 0, y: 0 };
 
-    public constructor(game: Game, i: number) {
+    public constructor(game: Game, i: number, demo: boolean = false, private demoLetter: string = null) {
         super(game, 0, 0, TILE_SIZE, TILE_SIZE);
         this.moveTo(i, 50, 45);
         const x = i % GRID_SIZE;
         const y = Math.floor(i / GRID_SIZE);
+        if (demo) return;
         this.value = x - 1 + (y - 2) * 3;
         if (x < 2 || x > 4 || y < 2 || y > 4) {
             this.value = 1;
@@ -76,7 +77,7 @@ export class Tile extends Entity {
     }
 
     public update(tick: number, mouse: Mouse): void {
-        this.hovered = this.isInside(mouse, 1);
+        this.hovered = !this.demoLetter && this.isInside(mouse, 1);
         this.d = this.hovered ? 1 : 0;
         super.update(tick, mouse);
         this.pulser.update(this.delta * 0.01);
@@ -103,7 +104,7 @@ export class Tile extends Entity {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.font = `20px ${font}`;
-        ctx.fillText(this.value.toString(), this.s.x / 2, this.s.y / 2);
+        ctx.fillText(this.demoLetter ? this.demoLetter : this.value.toString(), this.s.x / 2, this.s.y / 2);
         ctx.restore();
     }
 }

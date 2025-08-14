@@ -1,4 +1,3 @@
-import { HEIGHT, WIDTH } from '../index';
 import { Entity } from './entity';
 import { Game } from './game';
 
@@ -21,7 +20,9 @@ export class Blinders extends Entity {
 
     public draw(ctx: CanvasRenderingContext2D): void {
         ctx.fillStyle = '#000';
-        ctx.fillRect(0, 0, WIDTH * 0.55 * this.scale.x, HEIGHT);
-        ctx.fillRect(WIDTH - WIDTH * 0.55 * this.scale.x, 0, WIDTH * this.scale.x, HEIGHT);
+        const w = window.innerHeight > window.innerWidth ? 400 : 800;
+        const h = 800;
+        ctx.fillRect(0, 0, w * 0.55 * this.scale.x, h);
+        ctx.fillRect(w - w * 0.55 * this.scale.x, 0, w * this.scale.x, h);
     }
 }

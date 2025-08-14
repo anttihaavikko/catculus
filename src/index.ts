@@ -1,7 +1,7 @@
 import { AudioManager } from './engine/audio';
 import { Game } from './engine/game';
 import { Mouse } from './engine/mouse';
-import { Scene } from './scene';
+import { Intro } from './intro';
 // import 'tauri-plugin-gamepad-api';
 
 const upScale = 2;
@@ -17,7 +17,8 @@ const audio = new AudioManager(false, false, false);
 audio.prepare();
 audio.startMusic();
 const game = new Game(audio, canvas);
-game.scene = new Scene(game);
+// game.scene = new Scene(game);
+game.scene = new Intro(game);
 
 canvas.id = 'game';
 canvas.width = WIDTH;
@@ -71,7 +72,7 @@ document.onmousedown = canvas.ontouchstart = () => {
     audio.startMusic();
     mouse.pressing = true;
     mouse.holding = true;
-    // game.click(mouse, e.button === 2);
+    game.click(mouse);
     // setTimeout(() => mouse.x = -999, 100);
 };
 

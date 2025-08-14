@@ -1,5 +1,6 @@
 import { Cat, catPathLandscape, catPathPortrait } from './cat';
 import { COLORS } from './colors';
+import { drawBg } from './common';
 import { font } from './engine/constants';
 import { Container } from './engine/container';
 import { Game } from './engine/game';
@@ -160,7 +161,7 @@ export class Scene extends Container {
         this.life.p = portrait ? { x: 10, y: 765 } : { x: 10, y: 10 };
         this.life.changeSize(portrait);
         this.sumLimit = portrait ? 250 : 700;
-        document.body.style.background = portrait ? COLORS.bg : '#000';
+        // document.body.style.background = portrait ? COLORS.bg : '#000';
         // this.scoreLabel.setOptions({ align: portrait ? 'center' : 'right'});
     }
 
@@ -294,12 +295,8 @@ export class Scene extends Container {
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
-        ctx.save();
-        ctx.fillStyle = COLORS.bg;
-        ctx.fillRect(-100, -100, ctx.canvas.width + 200, ctx.canvas.height + 200);
+        drawBg(ctx); 
         super.draw(ctx);
-        ctx.restore();
-        
         // ctx.lineWidth = 5;
         // drawCircle(ctx, this.game.getMouse(), 10, 'transparent', '#000');
     }
