@@ -17,6 +17,7 @@ export class Tile extends Entity {
     public picked: boolean;
     public hidden: boolean;
     public cat: Cat;
+    public sunk: boolean;
 
     private pulser = new Pulser();
     private nudgeDir: Vector = { x: 0, y: 0 };
@@ -59,6 +60,7 @@ export class Tile extends Entity {
     public increment(): void {
         this.value++;
         this.pulse(1);
+        this.sunk = false;
     }
 
     public pulse(speed: number): void {
@@ -84,12 +86,23 @@ export class Tile extends Entity {
         this.pulser.update(this.delta * 0.01);
     }
 
+    private getLineColor(): string {
+        if (this.sunk) return COLORS.dark;
+        if (this.picked) return this.hovered ? COLORS.mark : COLORS.red;
+        return this.hovered ? COLORS.mark : '#191D32';
+    }
+
+    private getFillColor(): string {
+        if (this.sunk) return COLORS.bg;
+        if (this.picked) return this.hovered ? COLORS.red : COLORS.mark;
+        return '#fff';
+    }
+
     public draw(ctx: CanvasRenderingContext2D): void {
         if (this.hidden) return;
         ctx.save();
-        ctx.fillStyle = '#fff';
-        if (this.picked) ctx.fillStyle = this.hovered ? COLORS.red : COLORS.mark;
-        const outline = this.hovered ? COLORS.mark : (this.picked ? COLORS.red : '#191D32');
+        ctx.fillStyle = this.getFillColor();
+        const outline = this.getLineColor();
         ctx.strokeStyle = outline;
         ctx.beginPath();
         ctx.lineWidth = 7;

@@ -231,6 +231,7 @@ export class Scene extends Container {
             setTimeout(() => {
                 this.game.audio.score(i);
                 t.pulse(0.6);
+                t.sunk = true;
                 if (i > 0) {
                     this.add(new LineParticle(this.game, this.picks[i - 1].getCenter(), t.getCenter(), 1, 5, COLORS.mark, random(0, 10)));
                 }
