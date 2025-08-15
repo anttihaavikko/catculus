@@ -226,9 +226,10 @@ export class Scene extends Container {
         setTimeout(() => {
             if (this.life.isDead()) {
                 setTimeout(() => {
-                    this.game.camera.shake(5, 0.2);
+                    this.game.camera.shake(7, 0.3);
                     this.helpTexts[0].toggle('|GAME OVER|!');
                     this.helpTexts[1].toggle(`Final score: |${asScore(this.score)}`);
+                    this.cats.forEach(c => c.sleep(true));
                     this.game.audio.bad();
                 }, 500);
                 return;
