@@ -127,7 +127,7 @@ export class Scene extends Container {
                 const sum = this.picks.reduce((acc, t) => acc + t.value, 0);
                 const knownSum = this.picks.reduce((acc, t) => acc + (t.cat ? 0 : t.value), 0);
                 const shownSum = this.picks.some(t => t.cat) ? `${knownSum}?` : `${sum}`;
-                this.showSum(this.picks.length > 1 ? `${this.picks.map(t => t.getVisibleValue()).join('+')}=${shownSum}` : '');
+                this.showSum(this.picks.length > 1 ? `|${this.picks.map(t => t.getVisibleValue()).join('|+|')}|=|${shownSum}` : '');
 
                 if (sum >= this.target.value) {
                     mouse.x = -9999;
