@@ -234,6 +234,7 @@ export class Scene extends Container {
                 t.sunk = true;
                 t.extraDepth = -i;
                 if (i > 0) {
+                    this.game.camera.shake(2, 0.05);
                     this.add(new LineParticle(this.game, this.picks[i - 1].getCenter(), t.getCenter(), 1, 5, COLORS.mark, random(0, 10)));
                 }
                 if (i < this.picks.length - 1) t.nudge(this.picks[i + 1].p);
