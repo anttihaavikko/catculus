@@ -98,7 +98,7 @@ export class Tile extends Entity {
     private getLineColor(): string {
         if (this.sunk) return COLORS.dark;
         if (this.picked) return this.hovered ? COLORS.mark : COLORS.red;
-        return this.hovered ? COLORS.red : '#191D32';
+        return this.hovered ? COLORS.red : COLORS.blackish;
     }
 
     private getFillColor(): string {
