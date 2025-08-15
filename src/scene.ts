@@ -1,5 +1,6 @@
 import { Cat, catPathLandscape, catPathPortrait } from './cat';
 import { drawBg } from './common';
+import { ButtonEntity } from './engine/button';
 import { font } from './engine/constants';
 import { Container } from './engine/container';
 import { Game } from './engine/game';
@@ -42,6 +43,7 @@ export class Scene extends Container {
     private prev: Tile;
     private life: Life;
     private sumLimit: number;
+    private button: ButtonEntity;
     
     constructor(game: Game) {
         super(game);
@@ -57,11 +59,25 @@ export class Scene extends Container {
         this.target = new Target(game, 500, 220);
         this.multi = new Multiplier(game, 765, 73);
         this.life = new Life(game, 10, 10, 200, 20);
+        this.button = new ButtonEntity(game, 'TRY AGAIN?', 400, 500, 260, 70, () => {
+            this.game.changeScene(new Scene(game));
+        }, this.game.audio, 25);
+        this.button.d = 500;
+        this.button.visible = false;
 
         this.helpTexts.forEach(ht => ht.d = 500);
         this.life.d = this.multi.d = this.scoreLabel.d = 400;
 
-        this.add(...this.tiles, this.sumLabel, this.scoreLabel, ...this.helpTexts, this.target, this.multi, this.life);
+        this.add(
+            ...this.tiles,
+            this.sumLabel,
+            this.scoreLabel,
+            ...this.helpTexts,
+            this.target,
+            this.multi,
+            this.life,
+            this.button
+        );
 
         this.findTarget();
         // this.addCat();
@@ -86,6 +102,10 @@ export class Scene extends Container {
         this.game.onKeyDown(e => {
             if (e.key === 'a') this.addCat();
         });
+    }
+
+    public getButtons(): ButtonEntity[] {
+        return [this.button];
     }
     
     public update(tick: number, mouse: Mouse): void {
@@ -160,6 +180,7 @@ export class Scene extends Container {
         this.life.p = portrait ? { x: 10, y: 765 } : { x: 10, y: 10 };
         this.life.changeSize(portrait);
         this.sumLimit = portrait ? 250 : 700;
+        this.button.p = offset(this.target.p, -130, -35);
         // document.body.style.background = portrait ? COLORS.bg : '#000';
         // this.scoreLabel.setOptions({ align: portrait ? 'center' : 'right'});
     }
@@ -231,6 +252,7 @@ export class Scene extends Container {
                     this.helpTexts[1].toggle(`Final score: |${asScore(this.score)}`);
                     this.cats.forEach(c => c.sleep(true));
                     this.game.audio.bad();
+                    this.button.visible = true;
                 }, 500);
                 return;
             }
