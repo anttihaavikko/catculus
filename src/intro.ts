@@ -66,8 +66,8 @@ export class Intro extends Container {
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
-        drawBg(ctx);
         ctx.save();
+        drawBg(ctx);
         ctx.translate(this.logoX, this.logoY);
         ctx.scale(this.logoScale, this.logoScale);
         super.draw(ctx);
