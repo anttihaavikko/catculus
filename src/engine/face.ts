@@ -23,7 +23,7 @@ export interface FaceOptions {
 }
 
 const defaultOptions: FaceOptions = {
-    blush: '#BA2C73',
+    blush: '#FE6847',
     eyeSize: 10,
     width: 1,
     blinkDiff: 150,
