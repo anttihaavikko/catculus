@@ -21,6 +21,7 @@ export class Target extends Container {
         super(game, x, y);
         this.animationSpeed = 0.002;
         this.text = new TextEntity(game, '', 40, 0, 13, -1, ZERO, { shadow: 3, align: 'center' });
+        this.d = -500;
         this.add(this.text);
     }
     
