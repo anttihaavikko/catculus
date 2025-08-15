@@ -79,7 +79,9 @@ export class ButtonEntity extends Entity {
             }
             this.pressed = false;
         }
-        
+
+        super.update(tick, mouse);
+
         if (this.hovered && mouse.pressing && !this.pressed && !mouse.dragging) {
             this.pressed = true;
             return;
@@ -89,7 +91,7 @@ export class ButtonEntity extends Entity {
     public draw(ctx: CanvasRenderingContext2D): void {
         if (!this.visible) return;
         ctx.save();
-        ctx.translate(0, this.hovered ? -this.hoverRise : 0);
+        ctx.translate(0, this.hovered ? -this.hoverRise : 0 + this.animationPhaseAbs * 3);
 
         if (!this.frameless) {
             ctx.fillStyle = '#000';
