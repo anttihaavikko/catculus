@@ -7,7 +7,7 @@ import { Mouse } from './mouse';
 import { drawCircle, drawRect } from './drawing';
 import { offset, Vector } from './vector';
 
-const BORDER_THICKNESS = 5;
+const BORDER_THICKNESS = 7;
 
 export class ButtonEntity extends Entity {
     public visible = true;
@@ -157,7 +157,7 @@ export class ButtonEntity extends Entity {
             // drawCircle(ctx, { x: this.p.x + this.s.x * 0.5 - w * 0.5 - 7, y: this.p.y + this.s.y * 0.5 + 7 - 8 }, 10, 'transparent', '#000');
             return;
         }
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 5;
         const buttonColor = ['#3c8a24', '#de3d28', '#3872c9', '#dbc337'][this.button];
         const letter = 'ABXY'[this.button];
         drawCircle(ctx, { x: this.p.x + this.s.x * 0.5 - w * 0.5 - 7, y: this.p.y + this.s.y * 0.5 + 7 - 8 }, 10, 'transparent', buttonColor);

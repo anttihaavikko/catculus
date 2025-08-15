@@ -18,6 +18,7 @@ export class Tile extends Entity {
     public hidden: boolean;
     public cat: Cat;
     public sunk: boolean;
+    public extraDepth: number = 0;
 
     private pulser = new Pulser();
     private nudgeDir: Vector = { x: 0, y: 0 };
@@ -61,6 +62,7 @@ export class Tile extends Entity {
         this.value++;
         this.pulse(1);
         this.sunk = false;
+        this.extraDepth = 0;
     }
 
     public pulse(speed: number): void {
@@ -79,9 +81,16 @@ export class Tile extends Entity {
         return distance(this.p, other.p) < TILE_SIZE * 1.5;
     }
 
+    private getDepth(): number {
+        if (this.sunk) return -1;
+        if (this.hovered) return 5;
+        if (this.picked) return 4;
+        return 0;
+    }
+
     public update(tick: number, mouse: Mouse): void {
         this.hovered = !this.demoLetter && this.isInside(mouse, 1);
-        this.d = this.hovered ? 1 : 0;
+        this.d = this.getDepth() + this.extraDepth;
         super.update(tick, mouse);
         this.pulser.update(this.delta * 0.01);
     }
@@ -89,7 +98,7 @@ export class Tile extends Entity {
     private getLineColor(): string {
         if (this.sunk) return COLORS.dark;
         if (this.picked) return this.hovered ? COLORS.mark : COLORS.red;
-        return this.hovered ? COLORS.mark : '#191D32';
+        return this.hovered ? COLORS.red : '#191D32';
     }
 
     private getFillColor(): string {
@@ -105,7 +114,7 @@ export class Tile extends Entity {
         const outline = this.getLineColor();
         ctx.strokeStyle = outline;
         ctx.beginPath();
-        ctx.lineWidth = 7;
+        ctx.lineWidth = 12;
         const distance = -5;
         ctx.translate(this.p.x + this.nudgeDir.x * this.pulser.ratio * distance, this.p.y + this.nudgeDir.y * this.pulser.ratio * distance);
         ctx.translate(this.s.x * 0.5, this.s.y * 0.5);
