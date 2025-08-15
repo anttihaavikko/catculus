@@ -1,4 +1,5 @@
 import { Cat } from './cat';
+import { COLORS } from './colors';
 import { font } from './engine/constants';
 import { Entity } from './engine/entity';
 import { Game } from './engine/game';
@@ -86,9 +87,9 @@ export class Tile extends Entity {
     public draw(ctx: CanvasRenderingContext2D): void {
         if (this.hidden) return;
         ctx.save();
-        ctx.fillStyle = this.hovered ? 'yellow' : '#fff';
-        if (this.picked) ctx.fillStyle = 'orange';
-        const outline = this.hovered ? 'red' : '#191D32';
+        ctx.fillStyle = '#fff';
+        if (this.picked) ctx.fillStyle = this.hovered ? COLORS.red : COLORS.mark;
+        const outline = this.hovered ? COLORS.mark : (this.picked ? COLORS.red : '#191D32');
         ctx.strokeStyle = outline;
         ctx.beginPath();
         ctx.lineWidth = 7;

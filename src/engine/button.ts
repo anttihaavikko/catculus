@@ -94,7 +94,7 @@ export class ButtonEntity extends Entity {
         if (!this.frameless) {
             ctx.fillStyle = '#000';
             ctx.fillRect(this.p.x, this.p.y, this.s.x, this.s.y);
-            ctx.fillStyle = this.hovered ? '#f2e949' : '#fff';
+            ctx.fillStyle = this.hovered ? '#FBB13C' : '#fff';
             ctx.fillRect(this.p.x + this.borderThickness, this.p.y + this.borderThickness, this.s.x - this.borderThickness * 2, this.s.y - this.borderThickness * 2);
         }
 

@@ -1,4 +1,7 @@
 export const COLORS = {
-    bg: '#453A49',
-    dark: '#282F44'
+    bg: '#57B8FF',
+    dark: '#2176AE',
+    red: '#FE6847',
+    mark: '#FBB13C',
+    green: '#82CC32'
 };

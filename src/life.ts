@@ -1,3 +1,4 @@
+import { COLORS } from './colors';
 import { font } from './engine/constants';
 import { Entity } from './engine/entity';
 import { Game } from './engine/game';
@@ -11,7 +12,7 @@ export class Life extends Entity {
 
     constructor(game: Game, x: number, y: number, w: number, h: number) {
         super(game, x, y, w, h);
-        this.text = new TextEntity(game, 'LIVES:', 15, 0, 15, -1, ZERO, { shadow: 3, align: 'left' });
+        this.text = new TextEntity(game, 'LIVES:', 15, 0, 15, -1, ZERO, { shadow: 2.2, align: 'left' });
     }
 
     public change(amount: number): void {
@@ -49,7 +50,7 @@ export class Life extends Entity {
         ctx.stroke();
 
         ctx.beginPath();
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = COLORS.red;
         const inset = 6;
         ctx.translate(inset, inset);
         ctx.scale(Math.max(0, this.amount / 9), 1);

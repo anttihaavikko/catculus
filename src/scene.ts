@@ -1,4 +1,5 @@
 import { Cat, catPathLandscape, catPathPortrait } from './cat';
+import { COLORS } from './colors';
 import { drawBg } from './common';
 import { ButtonEntity } from './engine/button';
 import { font } from './engine/constants';
@@ -189,7 +190,7 @@ export class Scene extends Container {
         this.multi.paused = true;
         this.clearHelp();
         this.locked = true;
-        this.showSum(this.picks.length > 1 ? `${this.picks.map(t => t.value).join('+')}=${sum}` : '');
+        this.showSum(this.picks.length > 1 ? `|${this.picks.map(t => t.value).join('|+|')}|=|${sum}` : '');
         const diff = sum - this.target.value;
         const perfect = diff === 0;
         const pp = offset(this.picks[this.picks.length - 1].getCenter(), 0, -2);
@@ -212,14 +213,14 @@ export class Scene extends Container {
             'CATASTROPHE!',
             'MEOWSERABLE!'
         ]);
-        this.add(new TextPop(this.game, perfect ? winText : badText, pp, perfect ? 'yellow' : 'red', 20));
+        this.add(new TextPop(this.game, perfect ? winText : badText, pp, perfect ? COLORS.mark : COLORS.red, 20));
         if (perfect) this.game.audio.done();
         else {
             this.game.camera.shake(5, 0.1);
             this.game.audio.bad();
             setTimeout(() => {
                 this.game.audio.bad();
-                this.add(new TextPop(this.game, `${this.target.value - sum}`, pp, 'red'));
+                this.add(new TextPop(this.game, `${this.target.value - sum}`, pp, COLORS.red));
                 this.game.camera.shake(5, 0.15);
             }, 300);
         }
@@ -231,14 +232,14 @@ export class Scene extends Container {
                 this.game.audio.score(i);
                 t.pulse(0.6);
                 if (i > 0) {
-                    this.add(new LineParticle(this.game, this.picks[i - 1].getCenter(), t.getCenter(), 1, 5, 'yellow', random(0, 10)));
+                    this.add(new LineParticle(this.game, this.picks[i - 1].getCenter(), t.getCenter(), 1, 5, COLORS.mark, random(0, 10)));
                 }
                 if (i < this.picks.length - 1) t.nudge(this.picks[i + 1].p);
                 t.picked = false;
                 const amount = t.value * (i + 1) * (t.cat ? 5 : 1) * this.multi.value * (perfect ? 5 : 1);
                 this.score += amount;
                 this.scoreLabel.content = asScore(this.score);
-                this.add(new TextPop(this.game, asScore(amount), t.getCenter(), t.cat ? 'yellow' : '#fff'));
+                this.add(new TextPop(this.game, asScore(amount), t.getCenter(), t.cat ? COLORS.mark: '#fff'));
                 if (t.cat) {
                     this.hopCat(t.cat, t);
                 }
@@ -247,7 +248,7 @@ export class Scene extends Container {
         setTimeout(() => {
             if (this.life.isDead()) {
                 setTimeout(() => {
-                    this.game.camera.shake(7, 0.3);
+                    this.game.camera.shake(5, 0.2);
                     this.helpTexts[0].toggle('|GAME OVER|!');
                     this.helpTexts[1].toggle(`Final score: |${asScore(this.score)}`);
                     this.cats.forEach(c => c.sleep(true));

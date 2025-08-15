@@ -36,8 +36,8 @@ export class Intro extends Container {
         this.cats[1].sleep(true);
         
         this.add(
-            new WobblyText(game, 'Antti Haavikko presents', 18, 400, 105, 0.25, 1.5, { shadow : 3 }),
-            new WobblyText(game, 'Made for js13k 2025', 12, 400, 182, 0.2, 1.5, { shadow : 2 }),
+            new WobblyText(game, '|Antti Haavikko| presents', 18, 400, 105, 0.25, 1.5, { shadow : 2 }),
+            new WobblyText(game, 'Made for |js13k| 2025', 12, 400, 182, 0.2, 1.5, { shadow : 1.5 }),
             ...this.tiles,
             // this.button, 
             ...this.cats,

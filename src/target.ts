@@ -44,7 +44,7 @@ export class Target extends Container {
         ctx.rotate(a);
         ctx.scale(1 + this.animationPhaseAbs * 0.05, 1 + this.animationPhaseAbs * 0.05);
         ctx.lineWidth = 10;
-        const col = '#ffffff33';
+        const col = COLORS.dark;
         drawCircle(ctx, { x: 0, y: 0 }, 50, 'transparent', col);
 
         const max = 70;

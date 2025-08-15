@@ -16,6 +16,7 @@ export class LineParticle extends Particle {
 
     public draw(ctx: CanvasRenderingContext2D): void {
         ctx.beginPath();
+        if (this.ratio < 0.2) return;
         ctx.lineWidth = this.width * this.ratio;
         ctx.lineCap = 'butt';
         ctx.strokeStyle = this.color;

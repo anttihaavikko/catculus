@@ -98,7 +98,7 @@ export class WobblyText extends TextEntity {
                 ctx.fillStyle = '#000';
                 ctx.fillText(letter, spacing * i * mx + this.options.shadow * mx, this.options.shadow * my + Math.sin(this.time * 0.005 + i * this.frequency) * this.amplitude * my);
             }
-            ctx.fillStyle = useColor ? '#f2e949' : (this.options?.color ?? '#fff');
+            ctx.fillStyle = useColor ? '#FBB13C' : (this.options?.color ?? '#fff');
             if (this.options?.outline) {
                 ctx.strokeStyle = '#000';
                 ctx.lineWidth = this.options.outline * this.ratio;
