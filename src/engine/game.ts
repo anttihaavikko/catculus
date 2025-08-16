@@ -11,6 +11,7 @@ export class Game extends Entity {
     public scene: Container;
     public camera = new Camera();
     public usingPad: boolean;
+    public usingTouch: boolean;
 
     private keyDownListeners: ((event: KeyboardEvent) => void)[] = [];
     private keyUpListeners: ((event: KeyboardEvent) => void)[] = [];

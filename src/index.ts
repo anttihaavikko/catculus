@@ -64,19 +64,21 @@ window.onkeydown = (e: KeyboardEvent) => {
 
 window.onkeyup = (e: KeyboardEvent) => game.released(e);
 
-// document.oncontextmenu = (e: MouseEvent) => {
-//     e.preventDefault();
-// };
-
-document.onmousedown = canvas.ontouchstart = () => {
+document.onmousedown = () => {
     audio.startMusic();
     mouse.pressing = true;
     mouse.holding = true;
     game.click(mouse);
-    // setTimeout(() => mouse.x = -999, 100);
+};
+
+canvas.ontouchstart = (e: TouchEvent) => {
+    document.onmousedown(null);
+    game.usingTouch = true;
+    move(e.touches[0].clientX / ratio - x, e.touches[0].clientY / ratio - y);
 };
 
 document.onmouseup = canvas.ontouchcancel = canvas.ontouchend = () => {
+    mouse.pressing = false;
     mouse.holding = false;
 };
 

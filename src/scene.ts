@@ -40,7 +40,6 @@ export class Scene extends Container {
     private helpTexts: WobblyText[];
     private target: Target;
     private multi: Multiplier;
-    private holdMask: boolean;
     private prev: Tile;
     private life: Life;
     private sumLimit: number;
@@ -121,7 +120,6 @@ export class Scene extends Container {
             // if (!mouse.pressing && mouse.holding && this.picks.length > 0 && tile?.picked !== this.holdMask) return;
             if (tile && !tile.hidden && (this.picks.length === 0 || this.picks.some(t => t.isClose(tile)))) {
                 tile.picked = !tile.picked;
-                this.holdMask = tile.picked;
                 this.toggle(tile);
 
                 const sum = this.picks.reduce((acc, t) => acc + t.value, 0);
@@ -130,7 +128,6 @@ export class Scene extends Container {
                 this.showSum(this.picks.length > 1 ? `|${this.picks.map(t => t.getVisibleValue()).join('|+|')}|=|${shownSum}` : '');
 
                 if (sum >= this.target.value) {
-                    mouse.x = -9999;
                     mouse.holding = false;
                     this.scoreRound(sum);
                 }
@@ -139,7 +136,6 @@ export class Scene extends Container {
             this.prev = tile;
             return;
         }
-        this.holdMask = null;
         this.prev = null;
     }
 

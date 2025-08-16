@@ -97,13 +97,13 @@ export class Tile extends Entity {
 
     private getLineColor(): string {
         if (this.sunk) return COLORS.dark;
-        if (this.picked) return this.hovered ? COLORS.mark : COLORS.red;
-        return this.hovered ? COLORS.red : COLORS.blackish;
+        if (this.picked) return this.hovered && !this.game.usingTouch ? COLORS.mark : COLORS.red;
+        return this.hovered && !this.game.usingTouch ? COLORS.red : COLORS.blackish;
     }
 
     private getFillColor(): string {
         if (this.sunk) return COLORS.bg;
-        if (this.picked) return this.hovered ? COLORS.red : COLORS.mark;
+        if (this.picked) return this.hovered && !this.game.usingTouch ? COLORS.red : COLORS.mark;
         return '#fff';
     }
 
