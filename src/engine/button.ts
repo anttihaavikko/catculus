@@ -25,6 +25,7 @@ export class ButtonEntity extends Entity {
 
     constructor(game: Game, protected content: string, x: number, y: number, width: number, height: number, protected onClick: (right: boolean) => void, private audio: AudioManager, private fontSize = 30) {
         super(game, x - width * 0.5, y - height * 0.5, width, height);
+        this.animationSpeed = 0.0025;
     }
 
     public setClickOffset(offset: Vector): void {
