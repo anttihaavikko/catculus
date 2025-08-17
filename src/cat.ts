@@ -121,6 +121,7 @@ export class Cat extends Entity {
         this.moved = true;
         this.tween.move(to, 0.4);
         this.game.audio.jump();
+        setTimeout(() => this.game.audio.land(), 400);
     }
 
     public isAwake(): boolean {
