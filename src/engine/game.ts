@@ -81,6 +81,7 @@ export class Game extends Entity {
 
     public changeScene(scene: Container): void {
         this.blinders.close(() => {
+            this.scene?.end();
             this.scene = scene;
             scene.ratioChanged(window.innerHeight > window.innerWidth);
             this.blinders.open();

@@ -16,6 +16,7 @@ export class Intro extends Container {
     private logoX: number;
     private logoY: number;
     private logoScale: number;
+    private ended: boolean;
 
     constructor(game: Game) {
         super(game);
@@ -47,7 +48,12 @@ export class Intro extends Container {
         setTimeout(() => this.changeTile(), 3000);
     }
 
+    public end(): void {
+        this.ended = true;
+    }
+
     private changeTile(): void {
+        if (this.ended) return;
         this.cats[2].hop(randomCell(this.tiles).getCenter());
         setTimeout(() => this.changeTile(), randomInt(1000, 8000));
     }

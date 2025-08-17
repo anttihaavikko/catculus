@@ -60,4 +60,7 @@ export class Container extends Entity {
     public getButtons(): ButtonEntity[] {
         return [];
     }
+    
+    public end(): void {
+    }
 }
