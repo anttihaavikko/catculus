@@ -215,7 +215,7 @@ export class Scene extends Container {
         this.life.change(-diff);
         this.picks.forEach((t, i) => {
             setTimeout(() => {
-                this.game.audio.setPitch(Math.min(1.5, 1 + i * 0.05));
+                if (i % 2 === 0) this.game.audio.setPitch(Math.min(1.5, 1 + i * 0.05));
                 this.game.audio.score(i);
                 t.pulse(0.6);
                 t.sunk = true;
