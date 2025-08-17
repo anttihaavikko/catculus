@@ -9,4 +9,5 @@ export const skills: Skill[] = [
     { name: 'catnap', description: 'Triple score for sleeping cats, no bonus for awake cats' },
     { name: 'sprayer', description: 'Awake cats reveal the tile value when selected' },
     { name: 'reflexes', description: 'Any mistake equal to your total life is ignored' },
+    { name: 'nine', description: 'Regain a life for each used 9 in the calculation', repeatable: true },
 ];
