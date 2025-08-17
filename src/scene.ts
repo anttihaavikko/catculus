@@ -121,6 +121,7 @@ export class Scene extends Container {
             if (drag && this?.prev === tile) return;
             // if (!mouse.pressing && mouse.holding && this.picks.length > 0 && tile?.picked !== this.holdMask) return;
             if (tile && !tile.hidden && (this.picks.length === 0 || this.picks.some(t => t.isClose(tile)))) {
+                if (tile?.cat?.isAwake()) tile.cat.hop(tile.getCenter());
                 tile.picked = !tile.picked;
                 this.toggle(tile);
 
