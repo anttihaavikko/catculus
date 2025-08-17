@@ -58,7 +58,7 @@ document.onmousemove = (e: MouseEvent) => move(e.offsetX, e.offsetY);
 canvas.ontouchmove = (e: TouchEvent) => move(e.touches[0].clientX / ratio - x, e.touches[0].clientY / ratio - y);
 
 window.onkeydown = (e: KeyboardEvent) => {
-    audio.startMusic();
+    // audio.startMusic();
     game.pressed(e);
 };
 
