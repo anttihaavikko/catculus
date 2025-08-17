@@ -10,7 +10,7 @@ import { asScore } from './engine/math';
 import { Mouse } from './engine/mouse';
 import { random, randomCell } from './engine/random';
 import { TextEntity } from './engine/text';
-import { offset, ZERO } from './engine/vector';
+import { offset, Vector, ZERO } from './engine/vector';
 import { WobblyText } from './engine/wobbly';
 import { Life } from './life';
 import { Multiplier } from './multiplier';
@@ -130,6 +130,8 @@ export class Scene extends Container {
                 if (sum >= this.target.value) {
                     mouse.holding = false;
                     this.scoreRound(sum);
+                } else {
+                    this.add(new TextPop(this.game, shownSum, tile.getCenter(), '#fff', 25));
                 }
             }
 
@@ -182,6 +184,10 @@ export class Scene extends Container {
         // this.scoreLabel.setOptions({ align: portrait ? 'center' : 'right'});
     }
 
+    private randomOffset(p: Vector): Vector {
+        return offset(p, random(-10, 10), random(-10, 10));
+    }
+
     private scoreRound(sum: number): void {
         this.multi.paused = true;
         this.clearHelp();
@@ -209,14 +215,14 @@ export class Scene extends Container {
             'CATASTROPHE!',
             'MEOWSERABLE!'
         ]);
-        this.add(new TextPop(this.game, perfect ? winText : badText, pp, perfect ? COLORS.mark : COLORS.red, 20));
+        this.add(new TextPop(this.game, perfect ? winText : badText, this.randomOffset(pp), perfect ? COLORS.mark : COLORS.red, 20));
         if (perfect) this.game.audio.done();
         else {
             this.game.camera.shake(5, 0.1);
             this.game.audio.bad();
             setTimeout(() => {
                 this.game.audio.bad();
-                this.add(new TextPop(this.game, `${this.target.value - sum}`, pp, COLORS.red));
+                this.add(new TextPop(this.game, `${this.target.value - sum}`, this.randomOffset(pp), COLORS.red));
                 this.game.camera.shake(5, 0.15);
             }, 300);
         }
