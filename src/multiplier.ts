@@ -35,7 +35,7 @@ export class Multiplier extends Container {
 
         if (this.paused) return;
 
-        this.ratio = clamp01(this.ratio + this.delta * 0.00025);
+        this.ratio = clamp01(this.ratio + this.delta * 0.00013);
 
         if (this.ratio > 0.99 && this.value > 1) {
             this.reset(this.value - 1);

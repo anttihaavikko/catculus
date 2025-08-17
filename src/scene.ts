@@ -31,6 +31,7 @@ export class Scene extends Container {
     private tiles: Tile[];
     private picks: Tile[] = [];
     private level: number = 0;
+    private maxMulti: number = 1;
     private locked: boolean;
     private sumLabel: TextEntity;
     private cats: Cat[] = [];
@@ -131,7 +132,7 @@ export class Scene extends Container {
                     mouse.holding = false;
                     this.scoreRound(sum);
                 } else {
-                    this.add(new TextPop(this.game, shownSum, tile.getCenter(), '#fff', 25));
+                    this.add(new TextPop(this.game, shownSum, tile.getCenter(), '#fff', 35));
                 }
             }
 
@@ -216,13 +217,15 @@ export class Scene extends Container {
             'MEOWSERABLE!'
         ]);
         this.add(new TextPop(this.game, perfect ? winText : badText, this.randomOffset(pp), perfect ? COLORS.mark : COLORS.red, 20));
-        if (perfect) this.game.audio.done();
-        else {
+        if (perfect) {
+            this.game.audio.done();
+            this.maxMulti++;
+        } else {
             this.game.camera.shake(5, 0.1);
             this.game.audio.bad();
             setTimeout(() => {
                 this.game.audio.bad();
-                this.add(new TextPop(this.game, `${this.target.value - sum}`, this.randomOffset(pp), COLORS.red));
+                this.add(new TextPop(this.game, `${this.target.value - sum}`, this.randomOffset(pp), COLORS.red, 60));
                 this.game.camera.shake(5, 0.15);
             }, 300);
         }
@@ -280,7 +283,7 @@ export class Scene extends Container {
         this.showHelp();
         this.level++;
         this.multi.paused = false;
-        this.multi.reset(Math.min(13, this.level));
+        this.multi.reset(Math.min(13, this.maxMulti));
         this.target.set(this.generateTarget(this.level + 1));
     }
 
