@@ -13,7 +13,7 @@ canvas.style.userSelect = 'none';
 canvas.style.touchAction = 'none';
 const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
 const mouse: Mouse = { x: 0, y: 0 };
-const audio = new AudioManager(false, false, false);
+const audio = new AudioManager();
 audio.prepare();
 audio.startMusic();
 const game = new Game(audio, canvas);

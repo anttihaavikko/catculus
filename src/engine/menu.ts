@@ -59,7 +59,7 @@ export class Menu extends Entity {
         const value = parseFloat(localStorage.getItem(action.amountKey) ?? '0.5');
         localStorage.setItem(action.amountKey, clamp(value + 0.1 * dir, 0, 1).toString());
         this.buttons[index]?.setText(this.getLabel(action));  
-        this.game.audio.updateVolumes();  
+        // this.game.audio.updateVolumes();  
     }
 
     public trigger(): void {
@@ -99,12 +99,12 @@ export class Menu extends Entity {
             this.buttons[this.current]?.setButton(PadButton.A);
         }
         this.visible = !this.visible;
-        this.game.audio.dimMusic(this.visible);
+        // this.game.audio.dimMusic(this.visible);
     }
 
     public hide(): void {
         this.visible = false;
-        this.game.audio.dimMusic(false);
+        // this.game.audio.dimMusic(false);
     }
 
     public getButtons(): ButtonEntity[] {

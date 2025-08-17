@@ -1,33 +1,20 @@
 /* eslint-disable no-sparse-arrays */
 import { song } from '../song';
 import { CPlayer } from './audio-player';
-import { callTauri, callTauriWith, isTauri } from './tauri';
+import { isTauri } from './tauri';
 import { zzfx } from './zzfx';
 
 export class AudioManager {
     private started = false;
     private audio: HTMLAudioElement;
     private loaded: boolean;
-    private muted: boolean;
-    private music: boolean;
-    private sounds: boolean;
-    private musicVolume: number = 1;
-    private soundVolume: number = 1;
-    private musicDimmed: boolean;
+    private soundVolume: number = 0.5;
+    private musicVolume: number = 0.5;
 
-    constructor(muted: boolean, music: boolean, sounds: boolean) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    constructor() {
         this.audio = document.createElement('audio');
-        if (muted) this.toggleMute();
-        if (music) this.toggleMusic();
-        if (sounds) this.toggleSounds();
         document.body.appendChild(this.audio);
-        this.updateVolumes();
-    }
-
-    public updateVolumes(): void {
-        this.musicVolume = parseFloat(localStorage.getItem('CoupAhooMusicVol') ?? '0.5');
-        this.soundVolume = parseFloat(localStorage.getItem('CoupAhooSoundVol') ?? '0.5');
-        this.setVolume();
     }
 
     public prepare(): void {
@@ -49,7 +36,7 @@ export class AudioManager {
                 const wave = player.createWave();
                 this.audio.src = URL.createObjectURL(new Blob([wave], { type: 'audio/wav' }));
                 this.audio.loop = true;
-                this.setVolume();
+                this.audio.volume = this.musicVolume;
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 (this.audio as any).preservesPitch = false;
                 clearInterval(timer);
@@ -57,19 +44,15 @@ export class AudioManager {
         }, 5);
     }
 
-    public setVolume(): void {
-        this.audio.volume = this.getBaseMusicVolume() * (this.musicDimmed ? 0.5 : 1) * this.musicVolume;
-    }
-
     public getPitch(): number {
         return this.audio.playbackRate;
     }
 
     public setPitch(target: number): void {
-        if (isTauri()) {
-            callTauriWith('set_pitch', { pitch: target });
-            return;
-        }
+        // if (isTauri()) {
+        //     callTauriWith('set_pitch', { pitch: target });
+        //     return;
+        // }
         if (target < 0.1) {
             this.audio.volume = 0;
             return;
@@ -77,98 +60,10 @@ export class AudioManager {
         this.audio.playbackRate = target;
     }
 
-    public isMuted(): boolean {
-        return this.muted;
-    }
-
-    public toggleMuteTo(state: boolean): void {
-        this.muted = state;
-        if (this.muted) {
-            localStorage.setItem('CoupAhooMute', '1');
-            this.audio.pause();
-            return;
-        }
-        localStorage.removeItem('CoupAhooMute');
-        if (!this.music) this.audio.play();
-    }
-
-    public toggleMusicTo(state: boolean): void {
-        this.music = state;
-        if (this.music) {
-            localStorage.setItem('CoupAhooMusic', '1');
-            this.audio.pause();
-            return;
-        }
-        localStorage.removeItem('CoupAhooMusic');
-        if (!this.muted) this.audio.play();
-    }
-
-    public toggleSoundsTo(state: boolean): void {
-        this.sounds = state;
-        if (this.sounds) {
-            localStorage.setItem('CoupAhooSounds', '1');
-            return;
-        }
-        localStorage.removeItem('CoupAhooSounds');
-    }
-
-    public toggleMute(): void {
-        this.toggleMuteTo(!this.muted);
-        if (isTauri()) {
-            this.setTauriVolume();
-            return;
-        }
-        this.setVolume();
-    }
-
-    public toggleMusic(): void {
-        this.toggleMusicTo(!this.music);
-        if (isTauri()) {
-            this.setTauriVolume();
-            return;
-        }
-        this.setVolume();
-    }
-
-    public getEitherMute(): boolean {
-        return this.sounds && this.music;
-    }
-
-    public toggleSounds(): void {
-        this.toggleSoundsTo(!this.sounds);
-    }
-
-    public setTauriVolume(): void {
-        if (isTauri()) {
-            callTauriWith('set_volume', { volume: this.getBaseMusicVolume() * this.musicVolume });
-        }
-    }
-
-    private getBaseMusicVolume(): number {
-        return !this.muted && !this.music ? 0.7 : 0;
-    }
-
-    public dimMusic(state: boolean): void {
-        if (this.muted || this.music) return;
-        this.setPitch(state ? 0.95 : 1);
-        this.musicDimmed = state;
-        if (isTauri()) {
-            this.setTauriVolume();
-            return;
-        }
-        this.setVolume();
-    }
-
     public startMusic(): void {
-        if (isTauri()) {
-            callTauri('play_music');
-            this.setTauriVolume();
-            return;
-        }
-
         const timer = setInterval(() => {
             if (!this.loaded) return;
-            if (!this.muted && !this.music) this.audio.play();
+            this.audio.play();
             clearInterval(timer);
         }, 5);
         
@@ -181,13 +76,8 @@ export class AudioManager {
         // });
     }
 
-    public play(values: number[], name: string = 'button', volume: number = 1): void {
-        if (this.muted || this.sounds) return;
-        if (isTauri()){
-            callTauriWith('play_sound', { 'effect': name, volume: 0.6 * volume * this.soundVolume });
-            return;
-        } 
-        zzfx(...values.map((v, i) => i === 0 ? (v ?? 1) * 0.6 * this.soundVolume : v));
+    public play(values: number[]): void {
+        zzfx(...values.map((v, i) => i === 0 ? (v ?? 1) * 0.6 * this.soundVolume: v));
     }
 
     public button(): void {
