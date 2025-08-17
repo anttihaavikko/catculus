@@ -64,19 +64,19 @@ export class Cat extends Entity {
 
         ctx.translate(0, air * -40);
         
-        const drawLeg = (pos: number) => {
+        const drawLeg = (pos: number, len: number) => {
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.moveTo(pos, -10 - this.animationPhaseAbs * 6);
-            ctx.quadraticCurveTo(pos * 1.3, -1, pos, 1);
+            ctx.moveTo(pos, -3 - this.animationPhaseAbs * 6);
+            ctx.quadraticCurveTo((pos) * 1.4, -2 - this.animationPhaseAbs * 3, pos, 1 + len);
             ctx.stroke();
         };
 
         if (!this.sleeping) {
-            drawLeg(10);
-            drawLeg(-10);
-            drawLeg(7);
-            drawLeg(-7);
+            drawLeg(10, 0);
+            drawLeg(-10, 0);
+            drawLeg(6, 1);
+            drawLeg(-6, 1);
         }
         
         // body
