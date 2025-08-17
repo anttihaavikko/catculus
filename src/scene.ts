@@ -61,6 +61,7 @@ export class Scene extends Container {
         this.multi = new Multiplier(game, 765, 73);
         this.life = new Life(game, 10, 10, 200, 20);
         this.button = new ButtonEntity(game, 'TRY AGAIN?', 400, 500, 260, 70, () => {
+            this.game.audio.setPitch(1);
             this.game.changeScene(new Scene(game));
         }, this.game.audio, 25);
         this.button.d = 500;
@@ -260,7 +261,8 @@ export class Scene extends Container {
                     this.helpTexts[0].toggle('|GAME OVER|!');
                     this.helpTexts[1].toggle(`Final score: |${asScore(this.score)}`);
                     this.cats.forEach(c => c.sleep(true));
-                    this.game.audio.bad();
+                    this.game.audio.lose();
+                    this.game.audio.setPitch(0.7);
                     this.button.visible = true;
                 }, 500);
                 return;
