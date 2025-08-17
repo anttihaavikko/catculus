@@ -44,6 +44,7 @@ export class Cat extends Entity {
     }
 
     public sleep(state: boolean = true): void {
+        // if (state) this.game.audio.sleep();
         this.sleeping = state;
         this.face.sleeping = state;
     }
@@ -115,6 +116,7 @@ export class Cat extends Entity {
     }
 
     public hop(to: Vector): void {
+        if (this.sleeping) this.game.audio.meow();
         this.sleep(false);
         this.moved = true;
         this.tween.move(to, 0.4);
