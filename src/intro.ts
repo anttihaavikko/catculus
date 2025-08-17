@@ -4,6 +4,7 @@ import { ButtonEntity } from './engine/button';
 import { Container } from './engine/container';
 import { Game } from './engine/game';
 import { Mouse } from './engine/mouse';
+import { randomCell, randomInt } from './engine/random';
 import { WobblyText } from './engine/wobbly';
 import { Scene } from './scene';
 import { Tile, TILE_GAP, TILE_SIZE } from './tile';
@@ -19,7 +20,7 @@ export class Intro extends Container {
     constructor(game: Game) {
         super(game);
         // document.body.style.backgroundColor = COLORS.bg;
-        this.tiles = 'CAT GAME'.split('').map((c, i) => {
+        this.tiles = 'CATCULUS'.split('').map((c, i) => {
             const tile = new Tile(game, i, true, c);
             tile.p = { x: i * (TILE_SIZE + TILE_GAP) + 220, y: 120 };
             return tile;
@@ -30,7 +31,7 @@ export class Intro extends Container {
         
         this.addCat(this.tiles[0], -TILE_SIZE - TILE_GAP);
         this.addCat(this.tiles[this.tiles.length - 1], TILE_SIZE + TILE_GAP);
-        this.addCat(this.tiles[3], 0);
+        this.addCat(this.tiles[2], 0);
 
         this.cats[0].sleep(true);
         this.cats[1].sleep(true);
@@ -42,6 +43,13 @@ export class Intro extends Container {
             // this.button, 
             ...this.cats,
         );
+        
+        setTimeout(() => this.changeTile(), 3000);
+    }
+
+    private changeTile(): void {
+        this.cats[2].hop(randomCell(this.tiles).getCenter());
+        setTimeout(() => this.changeTile(), randomInt(1000, 8000));
     }
     
     public getButtons(): ButtonEntity[] {
