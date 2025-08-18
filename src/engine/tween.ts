@@ -36,12 +36,12 @@ export class Tween {
         this.startTween(target, duration);
     }
 
-    public rotate(target: number, duration: number): void {
-        this.type = 'rotate';
-        const rot = this.entity.rotation;
-        this.start = { x: rot, y: rot };
-        this.startTween({ x: target, y: target }, duration);
-    }
+    // public rotate(target: number, duration: number): void {
+    //     this.type = 'rotate';
+    //     const rot = this.entity.rotation;
+    //     this.start = { x: rot, y: rot };
+    //     this.startTween({ x: target, y: target }, duration);
+    // }
 
     public setEase(ease: (val: number) => number): void {
         this.easeFn = ease;
@@ -71,7 +71,7 @@ export class Tween {
         
         if (this.type == 'move') this.entity.p = { x: p.x, y: p.y };
         if (this.type == 'scale') this.entity.scale = { x: p.x, y: p.y };
-        if (this.type == 'rotate') this.entity.rotation = p.x;
+        // if (this.type == 'rotate') this.entity.rotation = p.x;
 
         this.active = this.time < 1;
     }
