@@ -15,7 +15,7 @@ export const song = {
                 79, // OSC1_XENV
                 0, // OSC2_WAVEFORM
                 255, // OSC2_VOL
-                116, // OSC2_SEMI
+                114, // OSC2_SEMI
                 0, // OSC2_DETUNE
                 83, // OSC2_XENV
                 0, // NOISE_VOL
@@ -170,7 +170,7 @@ export const song = {
                 6 // FX_DELAY_TIME
             ],
             // Patterns
-            p: [1,1,1,1,1,1,1,1,1,1,2,,,1,2,1,1,2],
+            p: [1,1,1,1,1,2,1,1,1,1,2,,1,1,2,1,1,2],
             // Columns
             c: [
                 {n: [114,,116,,,,116,,,,,,,,118,,114,,116,,,,116,,,,,,,,118],
@@ -193,20 +193,20 @@ export const song = {
                 0, // NOISE_VOL
                 6, // ENV_ATTACK
                 22, // ENV_SUSTAIN
-                34, // ENV_RELEASE
+                28, // ENV_RELEASE
                 0, // ENV_EXP_DECAY
-                0, // ARP_CHORD
-                5, // ARP_SPEED
+                18, // ARP_CHORD
+                0, // ARP_SPEED
                 0, // LFO_WAVEFORM
-                69, // LFO_AMT
-                3, // LFO_FREQ
+                39, // LFO_AMT
+                6, // LFO_FREQ
                 1, // LFO_FX_FREQ
                 1, // FX_FILTER
                 23, // FX_FREQ
                 167, // FX_RESONANCE
                 0, // FX_DIST
                 32, // FX_DRIVE
-                77, // FX_PAN_AMT
+                20, // FX_PAN_AMT
                 6, // FX_PAN_FREQ
                 25, // FX_DELAY_AMT
                 6 // FX_DELAY_TIME
@@ -228,20 +228,20 @@ export const song = {
         { // Instrument 5
             i: [
                 1, // OSC1_WAVEFORM
-                139, // OSC1_VOL
-                123, // OSC1_SEMI
+                84, // OSC1_VOL
+                128, // OSC1_SEMI
                 0, // OSC1_XENV
                 1, // OSC2_WAVEFORM
-                85, // OSC2_VOL
-                116, // OSC2_SEMI
-                9, // OSC2_DETUNE
+                32, // OSC2_VOL
+                128, // OSC2_SEMI
+                2, // OSC2_DETUNE
                 0, // OSC2_XENV
                 0, // NOISE_VOL
                 6, // ENV_ATTACK
                 22, // ENV_SUSTAIN
-                34, // ENV_RELEASE
+                31, // ENV_RELEASE
                 0, // ENV_EXP_DECAY
-                53, // ARP_CHORD
+                54, // ARP_CHORD
                 0, // ARP_SPEED
                 1, // LFO_WAVEFORM
                 69, // LFO_AMT
@@ -252,18 +252,20 @@ export const song = {
                 57, // FX_RESONANCE
                 0, // FX_DIST
                 32, // FX_DRIVE
-                29, // FX_PAN_AMT
+                13, // FX_PAN_AMT
                 7, // FX_PAN_FREQ
-                56, // FX_DELAY_AMT
+                28, // FX_DELAY_AMT
                 6 // FX_DELAY_TIME
             ],
             // Patterns
-            p: [,,,,,,,,,,,1,2,1,2],
+            p: [,,,,,,,,,,,3,2,1,2],
             // Columns
             c: [
                 {n: [140,,138,,142,,138,,,,138,,143,,138,,147,143,140,,140,,143,140,147,,140,,140,,145,147],
                     f: []},
-                {n: [143,,145,,143,,,,143,,145,,143,,147,,150,145,147,,142,,147,,147,,142,,138],
+                {n: [143,,,,150,,,,143,,150,,143,,147,,150,145,147,,142,,147,,147,,142,,138],
+                    f: []},
+                {n: [140,,,,142,,,,,,,,143,,,,147,,,,140,,,,147,,,,140,,147],
                     f: []}
             ]
         },
