@@ -8,13 +8,14 @@ import { Game } from './engine/game';
 import { LineParticle } from './engine/line';
 import { asScore } from './engine/math';
 import { Mouse } from './engine/mouse';
-import { random, randomCell } from './engine/random';
+import { random, randomCell, randomSorter } from './engine/random';
 import { TextEntity } from './engine/text';
 import { offset, Vector, ZERO } from './engine/vector';
 import { WobblyText } from './engine/wobbly';
 import { Life } from './life';
 import { Multiplier } from './multiplier';
 import { TextPop } from './pop';
+import { Skill, SkillId, skills } from './skills';
 import { Target } from './target';
 import { Tile } from './tile';
 
@@ -45,7 +46,10 @@ export class Scene extends Container {
     private life: Life;
     private sumLimit: number;
     private button: ButtonEntity;
-    
+    private skills: Skill[] = [];
+    private skillButtons: ButtonEntity[] = [];
+    private skillTargetLevel: number = 4;
+
     constructor(game: Game) {
         super(game);
 
@@ -82,10 +86,50 @@ export class Scene extends Container {
         );
 
         this.findTarget();
+        this.skills.push(skills.find(s => s.name === 'nine'));
+    }
+
+    private presentSkills(): void {
+        this.helpTexts[0].toggle('Pick |one| of these');
+        this.helpTexts[1].toggle('bonus |effects|...');
+        this.skillButtons = this.getSkills().map((skill, i) => {
+            const button = new ButtonEntity(this.game, skill.name.toUpperCase(), 360 + 170 * i, 350, 160, 60, () => {
+                this.skillButtons.forEach(b => b.dead = true);
+                this.skillButtons = [];
+                this.skills.push({ ...skill });
+                this.skillTargetLevel = this.level + 4 + this.skills.length;
+                this.next();
+            }, this.game.audio, 20);
+            button.onHover = () => {
+                const parts = skill.description.split('\n');
+                this.helpTexts[0].toggle(parts[0]);
+                this.helpTexts[1].toggle(parts[1]);
+            };
+            button.d = 999;
+            return button;
+        });
+        this.add(...this.skillButtons);
+    }
+
+    private has(skill: SkillId): boolean {
+        return this.skills.some(s => s.name === skill);
+    }
+
+    private skillLevel(skill: SkillId): number {
+        return this.skills.filter(s => s.name === skill).length;
+    }
+
+    private next(): void {
+        this.locked = false;
+        this.findTarget();
+    }
+
+    private getSkills(): Skill[] {
+        return skills.filter(s => s.repeatable || !this.skills.includes(s)).sort(randomSorter).slice(0, 3);
     }
 
     public getButtons(): ButtonEntity[] {
-        return [this.button];
+        return [this.button, ...this.skillButtons];
     }
     
     public update(tick: number, mouse: Mouse): void {
@@ -99,7 +143,7 @@ export class Scene extends Container {
             if (drag && this?.prev === tile) return;
             // if (!mouse.pressing && mouse.holding && this.picks.length > 0 && tile?.picked !== this.holdMask) return;
             if (tile && !tile.hidden && (this.picks.length === 0 || this.picks.some(t => t.isClose(tile)))) {
-                if (tile?.cat?.isAwake()) tile.cat.hop(tile.getCenter());
+                if (this.has('sprayer') && tile?.cat?.isAwake()) tile.cat.hop(tile.getCenter());
                 if (drag && tile.picked) return;
                 tile.picked = !tile.picked;
                 this.toggle(tile);
@@ -212,9 +256,12 @@ export class Scene extends Container {
         }
         this.picks.reverse();
         this.cats.forEach(c => c.moved = false);
-        this.life.change(-diff);
+        if (!this.has('reflexes') || !this.life.equals(diff)) this.life.change(-diff);
         this.picks.forEach((t, i) => {
             setTimeout(() => {
+                if (this.has('nine') && t.value === 9) {
+                    this.life.change(this.skillLevel('nine'));
+                }
                 if (i % 2 === 0) this.game.audio.setPitch(Math.min(1.5, 1 + i * 0.05));
                 this.game.audio.score(i);
                 t.pulse(0.6);
@@ -226,7 +273,9 @@ export class Scene extends Container {
                 }
                 if (i < this.picks.length - 1) t.nudge(this.picks[i + 1].p);
                 t.picked = false;
-                const amount = t.value * (i + 1) * (t.cat ? 5 : 1) * this.multi.value * (perfect ? 5 : 1);
+                const sleeping = !t.cat?.isAwake();
+                const catMulti = this.has('catnap') ? (sleeping ? 15 : 1) : 5;
+                const amount = t.value * (i + 1) * (t.cat ? catMulti : 1) * this.multi.value * (perfect ? 5 : 1);
                 this.score += amount;
                 this.scoreLabel.content = asScore(this.score);
                 this.add(new TextPop(this.game, asScore(amount), t.getCenter(), t.cat ? COLORS.mark: '#fff'));
@@ -256,10 +305,13 @@ export class Scene extends Container {
             appearing.forEach(t => t.appear());
             this.picks.forEach(t => t.increment());
             this.picks = [];
-            this.findTarget();
             this.sumLabel.content = '';
             this.addCat();
-            this.locked = false;
+            if (this.level === this.skillTargetLevel) {
+                this.presentSkills();
+            } else {
+                this.next();
+            }
             this.cats.filter(c => !c.moved).forEach(c => c.sleep(true));
         }, 800 + this.picks.length * 120);
     }
@@ -302,8 +354,16 @@ export class Scene extends Container {
         setTimeout(() => this.hopCat(cat), 2600);
     }
 
+    private getHopTarget(): Tile {
+        const opts = this.tiles.filter(t => !t.hidden && !t.cat);
+        if (opts.length === 0) return null;
+        return this.has('catnip') ? 
+            opts.sort((a, b) => b.value - a.value)[0] :
+            randomCell(opts);
+    }
+
     private hopCat(cat: Cat, prev: Tile = null): void {
-        const tile = randomCell(this.tiles.filter(t => !t.hidden && !t.cat));
+        const tile = this.getHopTarget();
         if (!tile) return;
         tile.cat = cat;
         if (prev) prev.cat = null;

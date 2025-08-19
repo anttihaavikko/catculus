@@ -10,6 +10,7 @@ const BORDER_THICKNESS = 7;
 
 export class ButtonEntity extends Entity {
     public visible = true;
+    public onHover: () => void;
 
     private pressed: boolean;
     private button: PadButton = PadButton.NONE;
@@ -118,5 +119,6 @@ export class ButtonEntity extends Entity {
 
     private hover(): void {
         this.audio.buttonHover();
+        if (this.onHover) this.onHover();
     }
 }

@@ -2,6 +2,7 @@ import { COLORS } from './colors';
 import { font } from './engine/constants';
 import { Entity } from './engine/entity';
 import { Game } from './engine/game';
+import { clamp } from './engine/math';
 import { TextEntity } from './engine/text';
 import { ZERO } from './engine/vector';
 
@@ -16,7 +17,11 @@ export class Life extends Entity {
     }
 
     public change(amount: number): void {
-        this.amount += amount;
+        this.amount = clamp(amount, 0, 9);
+    }
+
+    public equals(val: number): boolean {
+        return this.amount === val;
     }
 
     public isDead(): boolean {
