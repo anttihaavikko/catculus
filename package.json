@@ -16,7 +16,7 @@
     "party": "npm run build-zipped && npm run check-file-size",
     "preupload": "npm run build-zipped",
     "upload": "scp ./dist/index.html sahaqiel@sahaqiel.com:public_html/games/404.html",
-    "release": "cp ./dist/index.html ./itch/index.html && butler push ./itch anttihaavikko/404:html5",
+    "release": "cp ./dist/index.html ./itch/index.html && butler push ./itch anttihaavikko/catculus:html5",
     "tauri": "tauri"
   },
   "devDependencies": {
