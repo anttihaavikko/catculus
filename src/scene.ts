@@ -116,9 +116,9 @@ export class Scene extends Container {
                 this.skillButtons = [];
                 this.skills.push({ ...skill });
                 this.skillTargetLevel = this.level + 4 + this.skills.length;
-                this.next();
                 this.clearHelp();
                 this.marked = null;
+                setTimeout(() => this.next(), 250);
             }, this.game.audio, 20);
             button.onHover = showTooltip;
             button.d = 999;
