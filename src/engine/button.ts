@@ -1,4 +1,3 @@
-import { PadButton } from './pad';
 import { AudioManager } from './audio';
 import { font } from './constants';
 import { Entity } from './entity';
@@ -13,7 +12,6 @@ export class ButtonEntity extends Entity {
     public onHover: () => void;
 
     private pressed: boolean;
-    private button: PadButton = PadButton.NONE;
     private hoverRise: number = 5;
     protected hovered: boolean;
     private clickOffset: Vector = { x: 0, y: 0 };
@@ -43,18 +41,6 @@ export class ButtonEntity extends Entity {
 
     public makeFrameless(): void {
         this.frameless = true;
-    }
-
-    public setButton(button: PadButton): void {
-        this.button = button;
-    }
-
-    public setBorderThickness(thickness: number): void {
-        this.borderThickness = thickness;
-    }
-
-    public setText(text: string): void {
-        this.content = text;
     }
 
     public getText(): string {
@@ -101,18 +87,14 @@ export class ButtonEntity extends Entity {
             ctx.fillRect(this.p.x + this.borderThickness, this.p.y + this.borderThickness, this.s.x - this.borderThickness * 2, this.s.y - this.borderThickness * 2);
         }
 
-        const showButton = this.button !== PadButton.NONE;
-
         ctx.font =`${this.fontSize}px ${font}`;
-        // ctx.textBaseline = '';
-        // console.log(ctx.textBaseline);
         ctx.textBaseline = 'alphabetic';
         ctx.textAlign = 'center';
         ctx.fillStyle = this.frameless ? '#fff' : this.contentColor;
         ctx.strokeStyle = '#000';
         ctx.lineWidth = 6;
-        if (this.strokeText) ctx.strokeText(this.content, this.p.x + this.s.x * 0.5 + (showButton ? 10 : 0), this.p.y + this.s.y * 0.5 + this.fontSize * 0.3);
-        ctx.fillText(this.content, this.p.x + this.s.x * 0.5 + (showButton ? 10 : 0), this.p.y + this.s.y * 0.5 + this.fontSize * 0.3);
+        if (this.strokeText) ctx.strokeText(this.content, this.p.x + this.s.x * 0.5, this.p.y + this.s.y * 0.5 + this.fontSize * 0.3);
+        ctx.fillText(this.content, this.p.x + this.s.x * 0.5, this.p.y + this.s.y * 0.5 + this.fontSize * 0.3);
 
         ctx.restore();
     }
