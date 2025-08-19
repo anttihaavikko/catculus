@@ -21,9 +21,13 @@ export class ButtonEntity extends Entity {
 
     private borderThickness = BORDER_THICKNESS;
 
-    constructor(game: Game, protected content: string, x: number, y: number, width: number, height: number, protected onClick: (right: boolean) => void, private audio: AudioManager, private fontSize = 30) {
+    constructor(game: Game, protected content: string, x: number, y: number, width: number, height: number, protected onClick: () => void, private audio: AudioManager, private fontSize = 30) {
         super(game, x - width * 0.5, y - height * 0.5, width, height);
         this.animationSpeed = 0.0025;
+    }
+
+    public isHovered(): boolean {
+        return this.hovered;
     }
 
     public setClickOffset(offset: Vector): void {
@@ -34,9 +38,9 @@ export class ButtonEntity extends Entity {
         this.hoverRise = val;
     }
 
-    public trigger(right?: boolean): void {
+    public trigger(): void {
         this.audio.button();
-        this.onClick(right);
+        this.onClick();
     }
 
     public makeFrameless(): void {

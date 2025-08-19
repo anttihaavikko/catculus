@@ -72,9 +72,9 @@ document.onmousedown = () => {
 };
 
 canvas.ontouchstart = (e: TouchEvent) => {
-    document.onmousedown(null);
     game.usingTouch = true;
     move(e.touches[0].clientX / ratio - x, e.touches[0].clientY / ratio - y);
+    document.onmousedown(null);
 };
 
 document.onmouseup = canvas.ontouchcancel = canvas.ontouchend = () => {

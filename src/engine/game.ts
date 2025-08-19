@@ -27,7 +27,7 @@ export class Game extends Entity {
     public click(mouse: Mouse): void {
         this.usingPad = false;
         this.scene?.getButtons().forEach(b => {
-            if (b.visible && b.isInside(mouse)) b.trigger(false);
+            if (b.visible && b.isInside(mouse)) b.trigger();
         });
     }
 

@@ -50,6 +50,7 @@ export class Scene extends Container {
     private skillButtons: ButtonEntity[] = [];
     private skillTargetLevel: number = 4;
     private inPortrait: boolean;
+    private marked: SkillId;
 
     constructor(game: Game) {
         super(game);
@@ -95,22 +96,31 @@ export class Scene extends Container {
         this.helpTexts[0].toggle('Pick |one| of these');
         this.helpTexts[1].toggle('bonus |effects|...');
         this.game.audio.skills();
+        this.game.getMouse().x = -999;
         this.skillButtons = this.getSkills().map((skill, i) => {
-            const p: Vector = this.inPortrait ? { x: 200, y: 290 + i * 70 } : { x: 360 + 170 * i, y: 350};
+            const showTooltip = () => {
+                this.game.audio.preview();
+                const parts = skill.description.split('\n');
+                this.helpTexts[0].toggle(parts[0]);
+                this.helpTexts[1].toggle(parts[1]);
+            };
+            const p: Vector = this.inPortrait ? { x: 200, y: 390 + i * 70 } : { x: 360 + 170 * i, y: 350};
             const button = new ButtonEntity(this.game, skill.name.toUpperCase(), p.x, p.y, 160, 60, () => {
+                if (this.game.usingTouch && this.marked !== skill.name) {
+                    showTooltip();
+                    setTimeout(() => this.marked = skill.name, 500);
+                    return;
+                }
                 this.game.audio.skill();
                 this.skillButtons.forEach(b => b.dead = true);
                 this.skillButtons = [];
                 this.skills.push({ ...skill });
                 this.skillTargetLevel = this.level + 4 + this.skills.length;
                 this.next();
+                this.clearHelp();
+                this.marked = null;
             }, this.game.audio, 20);
-            button.onHover = () => {
-                this.game.audio.preview();
-                const parts = skill.description.split('\n');
-                this.helpTexts[0].toggle(parts[0]);
-                this.helpTexts[1].toggle(parts[1]);
-            };
+            button.onHover = showTooltip;
             button.d = 999;
             return button;
         });
