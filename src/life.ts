@@ -9,7 +9,6 @@ import { ZERO } from './engine/vector';
 export class Life extends Entity {
     private amount: number = 9;
     private text: TextEntity;
-    private offset: number;
 
     constructor(game: Game, x: number, y: number, w: number, h: number) {
         super(game, x, y, w, h);
@@ -17,7 +16,7 @@ export class Life extends Entity {
     }
 
     public change(amount: number): void {
-        this.amount = clamp(amount, 0, 9);
+        this.amount = clamp(this.amount + amount, 0, 9);
     }
 
     public equals(val: number): boolean {
