@@ -49,6 +49,7 @@ export class Scene extends Container {
     private skills: Skill[] = [];
     private skillButtons: ButtonEntity[] = [];
     private skillTargetLevel: number = 4;
+    private inPortrait: boolean;
 
     constructor(game: Game) {
         super(game);
@@ -86,14 +87,16 @@ export class Scene extends Container {
         );
 
         this.findTarget();
-        this.skills.push(skills.find(s => s.name === 'nine'));
+        // this.skills.push(skills.find(s => s.name === 'nine'));
+        // setTimeout(() => this.presentSkills(), 2000);
     }
 
     private presentSkills(): void {
         this.helpTexts[0].toggle('Pick |one| of these');
         this.helpTexts[1].toggle('bonus |effects|...');
         this.skillButtons = this.getSkills().map((skill, i) => {
-            const button = new ButtonEntity(this.game, skill.name.toUpperCase(), 360 + 170 * i, 350, 160, 60, () => {
+            const p: Vector = this.inPortrait ? { x: 200, y: 290 + i * 70 } : { x: 360 + 170 * i, y: 350};
+            const button = new ButtonEntity(this.game, skill.name.toUpperCase(), p.x, p.y, 160, 60, () => {
                 this.skillButtons.forEach(b => b.dead = true);
                 this.skillButtons = [];
                 this.skills.push({ ...skill });
@@ -206,6 +209,7 @@ export class Scene extends Container {
         this.life.changeSize(portrait);
         this.sumLimit = portrait ? 250 : 700;
         this.button.p = offset(this.target.p, -130, -35);
+        this.inPortrait = portrait;
         // document.body.style.background = portrait ? COLORS.bg : '#000';
         // this.scoreLabel.setOptions({ align: portrait ? 'center' : 'right'});
     }
