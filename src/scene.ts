@@ -89,7 +89,7 @@ export class Scene extends Container {
 
         this.findTarget();
         // this.skills.push(skills.find(s => s.name === 'nine'));
-        // setTimeout(() => this.presentSkills(), 2000);
+        setTimeout(() => this.presentSkills(), 1000);
     }
 
     private presentSkills(): void {
@@ -104,8 +104,8 @@ export class Scene extends Container {
                 this.helpTexts[0].toggle(parts[0]);
                 this.helpTexts[1].toggle(parts[1]);
             };
-            const p: Vector = this.inPortrait ? { x: 200, y: 390 + i * 70 } : { x: 360 + 170 * i, y: 350};
-            const button = new ButtonEntity(this.game, skill.name.toUpperCase(), p.x, p.y, 160, 60, () => {
+            const p: Vector = this.inPortrait ? { x: 200, y: 390 + i * 70 } : { x: 260 + 210 * i, y: 350};
+            const button = new ButtonEntity(this.game, `${skill.icon} ${skill.name.toUpperCase()}`, p.x, p.y, 200, 60, () => {
                 if (this.game.usingTouch && this.marked !== skill.name) {
                     showTooltip();
                     setTimeout(() => this.marked = skill.name, 500);
