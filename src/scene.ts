@@ -99,18 +99,24 @@ export class Scene extends Container {
         setTimeout(() => this.presentSkills(), 1000);
     }
 
+    private scaleHelpTexts(scale: number): void {
+        this.helpTexts.forEach(ht => ht.scale = { x: scale, y: scale });
+    }
+
     private presentSkills(): void {
         this.helpTexts[0].toggle('Pick |one| of these');
         this.helpTexts[1].toggle('bonus |effects|...');
         this.skillBg.visible = true;
         this.game.audio.skills();
         this.game.getMouse().x = -999;
+        
         this.skillButtons = this.getSkills().map((skill, i) => {
             const showTooltip = () => {
                 this.game.audio.preview();
                 const parts = skill.description.split('\n');
-                this.helpTexts[0].toggle(parts[0]);
-                this.helpTexts[1].toggle(parts[1]);
+                this.helpTexts[0].content = parts[0];
+                this.helpTexts[1].content = parts[1];
+                this.scaleHelpTexts(this.inPortrait ? 0.8 : 1);
             };
             const p: Vector = this.inPortrait ? { x: 200, y: 390 + i * 70 } : { x: 260 + 210 * i, y: 350};
             const button = new ButtonEntity(this.game, `${skill.icon} ${skill.name.toUpperCase()}`, p.x, p.y, 200, 60, () => {
