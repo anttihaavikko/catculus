@@ -96,7 +96,7 @@ export class Scene extends Container {
 
         this.findTarget();
         // this.skills.push(skills.find(s => s.name === 'nine'));
-        setTimeout(() => this.presentSkills(), 1000);
+        // setTimeout(() => this.presentSkills(), 1000);
     }
 
     private scaleHelpTexts(scale: number): void {
