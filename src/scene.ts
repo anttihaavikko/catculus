@@ -1,3 +1,4 @@
+import { SkillBg } from './bg';
 import { Cat, catPathLandscape, catPathPortrait } from './cat';
 import { COLORS } from './colors';
 import { drawBg } from './common';
@@ -51,6 +52,8 @@ export class Scene extends Container {
     private skillTargetLevel: number = 4;
     private inPortrait: boolean;
     private marked: SkillId;
+    private skillBg: SkillBg;
+    private skillIcons: TextEntity;
 
     constructor(game: Game) {
         super(game);
@@ -72,6 +75,8 @@ export class Scene extends Container {
         }, this.game.audio, 25);
         this.button.d = 500;
         this.button.visible = false;
+        this.skillBg = new SkillBg(game);
+        this.skillIcons = new TextEntity(game, '', 25, 790, 122, -1, ZERO, { shadow: 2, align: 'right' });
 
         this.helpTexts.forEach(ht => ht.d = 500);
         this.life.d = this.multi.d = this.scoreLabel.d = 400;
@@ -84,7 +89,9 @@ export class Scene extends Container {
             this.target,
             this.multi,
             this.life,
-            this.button
+            this.button,
+            this.skillBg,
+            this.skillIcons
         );
 
         this.findTarget();
@@ -95,6 +102,7 @@ export class Scene extends Container {
     private presentSkills(): void {
         this.helpTexts[0].toggle('Pick |one| of these');
         this.helpTexts[1].toggle('bonus |effects|...');
+        this.skillBg.visible = true;
         this.game.audio.skills();
         this.game.getMouse().x = -999;
         this.skillButtons = this.getSkills().map((skill, i) => {
@@ -111,6 +119,7 @@ export class Scene extends Container {
                     setTimeout(() => this.marked = skill.name, 500);
                     return;
                 }
+                this.skillBg.visible = false;
                 this.game.audio.skill();
                 this.skillButtons.forEach(b => b.dead = true);
                 this.skillButtons = [];
@@ -118,6 +127,7 @@ export class Scene extends Container {
                 this.skillTargetLevel = this.level + 4 + this.skills.length;
                 this.clearHelp();
                 this.marked = null;
+                this.skillIcons.content = this.skills.map(s => s.icon).join(' ');
                 setTimeout(() => this.next(), 250);
             }, this.game.audio, 20);
             button.onHover = showTooltip;
