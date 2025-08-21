@@ -10,6 +10,7 @@ import { ZERO } from './engine/vector';
 export class Multiplier extends Container {
     public value: number;
     public paused: boolean;
+    public dropRate: number = 1;
     
     private text: TextEntity;
     private ratio: number = 0;
@@ -31,7 +32,7 @@ export class Multiplier extends Container {
 
     public update(tick: number, mouse: Mouse): void {
         super.update(tick, mouse);
-        this.pulser.update(this.delta * 0.0075);
+        this.pulser.update(this.delta * 0.0075 * this.dropRate);
 
         if (this.paused) return;
 

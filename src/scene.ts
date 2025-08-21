@@ -126,7 +126,9 @@ export class Scene extends Container {
                     setTimeout(() => this.marked = skill.name, 500);
                     return;
                 }
-                if (skill.name === 'meow') this.maxPossibleMulti++;
+                if (skill.name === 'litter') this.maxPossibleMulti++;
+                if (skill.name === 'zoomies') this.multi.dropRate *= 0.8;
+                if (skill.name === 'copycat') this.life.change(9);
                 this.skillBg.visible = false;
                 this.game.audio.skill();
                 this.skillButtons.forEach(b => b.dead = true);
