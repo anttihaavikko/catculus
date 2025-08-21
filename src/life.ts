@@ -16,6 +16,7 @@ export class Life extends Entity {
     }
 
     public change(amount: number): void {
+        if (this.amount === 0) return;
         this.amount = clamp(this.amount + amount, 0, 9);
     }
 
