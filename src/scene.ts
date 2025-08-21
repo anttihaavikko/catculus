@@ -130,7 +130,7 @@ export class Scene extends Container {
                 if (skill.name === 'litter') this.maxPossibleMulti++;
                 if (skill.name === 'zoomies') this.multi.dropRate *= 0.8;
                 if (skill.name === 'copycat') this.life.change(9);
-                if (skill.name === 'kitten') this.catMoveDelay *= 1.3;
+                if (skill.name === 'hairball') this.catMoveDelay *= 1.3;
                 this.skillBg.visible = false;
                 this.game.audio.skill();
                 this.skillButtons.forEach(b => b.dead = true);

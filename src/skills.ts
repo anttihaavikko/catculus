@@ -23,5 +23,5 @@ export const skills: Skill[] = [
     { name: 'litter', icon: '☋', description: '|Increase| the |maximum\npossible |multiplier| by |one', repeatable: true },
     { name: 'zoomies', icon: '⧰', description: '|Increase| the |delay| of which\n|multiplier| drops by |20%', repeatable: true },
     { name: 'copycat', icon: '♅', description: 'Immediately |heal| back\nto full |9 lives', repeatable: true },
-    { name: 'kitten', icon: '㉦', description: '|Cats| take |30%| longer\nto |move| on the |board', repeatable: true },
+    { name: 'hairball', icon: '㉦', description: '|Cats| take |30%| longer\nto |move| on the |board', repeatable: true },
 ];
