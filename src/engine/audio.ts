@@ -1,7 +1,6 @@
 /* eslint-disable no-sparse-arrays */
 import { song } from '../song';
 import { CPlayer } from './audio-player';
-import { isTauri } from './tauri';
 import { zzfx } from './zzfx';
 
 export class AudioManager {
@@ -18,7 +17,7 @@ export class AudioManager {
     }
 
     public prepare(): void {
-        if (this.started || isTauri()) return;
+        // if (this.started || isTauri()) return;
         
         this.started = true;
 
