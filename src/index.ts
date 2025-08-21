@@ -57,12 +57,12 @@ const move = (x: number, y: number): void => {
 document.onmousemove = (e: MouseEvent) => move(e.offsetX, e.offsetY);
 canvas.ontouchmove = (e: TouchEvent) => move(e.touches[0].clientX / ratio - x, e.touches[0].clientY / ratio - y);
 
-window.onkeydown = (e: KeyboardEvent) => {
-    // audio.startMusic();
-    game.pressed(e);
-};
+// window.onkeydown = (e: KeyboardEvent) => {
+//     // audio.startMusic();
+//     game.pressed(e);
+// };
 
-window.onkeyup = (e: KeyboardEvent) => game.released(e);
+// window.onkeyup = (e: KeyboardEvent) => game.released(e);
 
 document.onmousedown = () => {
     audio.startMusic();

@@ -30,30 +30,9 @@ export class Game extends Entity {
             if (b.visible && b.isInside(mouse)) b.trigger();
         });
     }
-
-    public onKeyDown(callback: (event: KeyboardEvent) => void): void {
-        this.keyDownListeners.push(callback);
-    }
-
-    public onKeyUp(callback: (event: KeyboardEvent) => void): void {
-        this.keyUpListeners.push(callback);
-    }
-
-    public clearKeyListeners(): void {
-        this.keyDownListeners = [];
-        this.keyUpListeners = [];
-    }
-
-    public pressed(event: KeyboardEvent): void {
-        if (event.repeat) return;
-        this.keyDownListeners.forEach(k => k(event));
-    }
-
-    public released(event: KeyboardEvent): void {
-        this.keyUpListeners.forEach(k => k(event));
-    }
-
+    
     public getMouse(): Mouse {
+        
         return this.curMouse;
     }
 
