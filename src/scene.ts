@@ -285,6 +285,7 @@ export class Scene extends Container {
             this.game.audio.done();
             this.maxMulti++;
         } else {
+            if (this.has('purr')) this.maxMulti++;
             this.game.camera.shake(5, 0.1);
             this.game.audio.bad();
             setTimeout(() => {
