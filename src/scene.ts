@@ -55,6 +55,7 @@ export class Scene extends Container {
     private skillBg: SkillBg;
     private skillIcons: TextEntity;
     private maxPossibleMulti: number = 13;
+    private catMoveDelay: number = 1;
 
     constructor(game: Game) {
         super(game);
@@ -129,6 +130,7 @@ export class Scene extends Container {
                 if (skill.name === 'litter') this.maxPossibleMulti++;
                 if (skill.name === 'zoomies') this.multi.dropRate *= 0.8;
                 if (skill.name === 'copycat') this.life.change(9);
+                if (skill.name === 'kitten') this.catMoveDelay *= 1.3;
                 this.skillBg.visible = false;
                 this.game.audio.skill();
                 this.skillButtons.forEach(b => b.dead = true);
@@ -399,9 +401,9 @@ export class Scene extends Container {
         this.cats.push(cat);
         this.add(cat);
         cat.hop({ x: this.catPath[1].x, y: this.catPath[1].y });
-        setTimeout(() => cat.hop({ x: this.catPath[2].x, y: this.catPath[2].y }), 1000);
-        setTimeout(() => cat.hop({ x: this.catPath[3].x, y: this.catPath[3].y }), 1700);
-        setTimeout(() => this.hopCat(cat), 2600);
+        setTimeout(() => cat.hop({ x: this.catPath[2].x, y: this.catPath[2].y }), 1000 * this.catMoveDelay);
+        setTimeout(() => cat.hop({ x: this.catPath[3].x, y: this.catPath[3].y }), 1700 * this.catMoveDelay);
+        setTimeout(() => this.hopCat(cat), 2600 * this.catMoveDelay);
     }
 
     private getHopTarget(): Tile {
