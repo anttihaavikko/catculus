@@ -98,7 +98,7 @@ export class Scene extends Container {
 
         this.findTarget();
         // this.skills.push(skills.find(s => s.name === 'nine'));
-        setTimeout(() => this.presentSkills(), 1000);
+        // setTimeout(() => this.presentSkills(), 1000);
     }
 
     private scaleHelpTexts(scale: number): void {
@@ -256,6 +256,7 @@ export class Scene extends Container {
         this.sumLimit = portrait ? 250 : 700;
         this.button.p = offset(this.target.p, -130, -35);
         this.inPortrait = portrait;
+        this.skillIcons.p = portrait ? { x: 390, y: 120 } : { x: 790, y: 122 };
         // document.body.style.background = portrait ? COLORS.bg : '#000';
         // this.scoreLabel.setOptions({ align: portrait ? 'center' : 'right'});
     }
