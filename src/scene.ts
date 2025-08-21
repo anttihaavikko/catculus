@@ -290,14 +290,21 @@ export class Scene extends Container {
         this.picks.reverse();
         this.cats.forEach(c => c.moved = false);
         if (!this.has('reflexes') || !this.life.equals(diff)) this.life.change(-diff);
+        let hissMulti = 1;
         this.picks.forEach((t, i) => {
             setTimeout(() => {
                 if (this.has('nine') && t.value === 9) {
                     const amt = this.skillLevel('nine');
                     setTimeout(() => {
-                        this.add(new TextPop(this.game, `+${amt}`, t.getCenter(), COLORS.green, 35));
+                        this.add(new TextPop(this.game, `+${amt}`, this.randomOffset(t.getCenter()), COLORS.green, 35));
                         this.life.change(amt);
-                    }, 300);
+                    }, 200);
+                }
+                if (this.has('hiss') && t.value === 2) {
+                    hissMulti += this.skillLevel('hiss');
+                    setTimeout(() => {
+                        this.add(new TextPop(this.game, `x${hissMulti}`, this.randomOffset(t.getCenter()), COLORS.green, 35));
+                    }, 100);
                 }
                 if (i % 2 === 0) this.game.audio.setPitch(Math.min(1.5, 1 + i * 0.05));
                 this.game.audio.score(i);
@@ -313,7 +320,7 @@ export class Scene extends Container {
                 const sleeping = !t.cat?.isAwake();
                 const catMulti = this.has('catnap') ? (sleeping ? 15 : 1) : 5;
                 const allergyMulti = this.has('allergies') ? (t.cat ? 0 : 2) : 1;
-                const amount = t.value * (i + 1) * (t.cat ? catMulti : 1) * this.multi.value * (perfect ? 5 : 1) * allergyMulti;
+                const amount = t.value * (i + 1) * (t.cat ? catMulti : 1) * this.multi.value * (perfect ? 5 : 1) * allergyMulti * hissMulti;
                 this.score += amount;
                 this.scoreLabel.content = asScore(this.score);
                 if (allergyMulti > 0) this.add(new TextPop(this.game, asScore(amount), t.getCenter(), t.cat ? COLORS.mark: '#fff'));
