@@ -407,8 +407,9 @@ export class Scene extends Container {
     private getHopTarget(): Tile {
         const opts = this.tiles.filter(t => !t.hidden && !t.cat);
         if (opts.length === 0) return null;
-        return this.has('catnip') ? 
-            opts.sort((a, b) => b.value - a.value)[0] :
+        const first = this.skills.find(s => s.name === 'catnip' || s.name === 'box')?.name === 'catnip';
+        return this.has('catnip') || this.has('box') ? 
+            opts.sort((a, b) => b.value - a.value)[first ? 0 : (opts.length - 1)] :
             randomCell(opts);
     }
 
