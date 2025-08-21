@@ -11,7 +11,7 @@ import { asScore } from './engine/math';
 import { Mouse } from './engine/mouse';
 import { random, randomCell, randomSorter } from './engine/random';
 import { TextEntity } from './engine/text';
-import { offset, Vector, ZERO } from './engine/vector';
+import { distance, offset, Vector, ZERO } from './engine/vector';
 import { WobblyText } from './engine/wobbly';
 import { Life } from './life';
 import { Multiplier } from './multiplier';
@@ -185,6 +185,17 @@ export class Scene extends Container {
                 if (drag && tile.picked) return;
                 tile.picked = !tile.picked;
                 this.toggle(tile);
+
+                if (!tile.cat && this.has('mouse')) {
+                    const p = tile.getCenter();
+                    const closest = [...this.cats].sort((a, b) => distance(a.p, p) - distance(b.p, p))[0];
+                    if (closest) {
+                        const prev = this.tiles.find(t => t.cat === closest);
+                        if (prev) prev.cat = null;
+                        tile.cat = closest;
+                        closest.hop(p);
+                    }
+                }
 
                 const sum = this.picks.reduce((acc, t) => acc + t.value, 0);
                 const knownSum = this.picks.reduce((acc, t) => acc + (t.cat ? 0 : t.value), 0);

@@ -7,7 +7,7 @@ export interface Skill {
 
 export type SkillId = 'catnip' | 'catnap' | 'sprayer' | 'reflexes' | 'nine' | 'allergies' | 'hiss' |
     'meow' | 'purr' | 'copycat' | 'hairball' | 'litter' | 'kitten' | 'box' | 'loaf' | 'knead' | 'rescue' |
-    'scratch' | 'beans' | 'zoomies' | 'yowling';
+    'scratch' | 'beans' | 'zoomies' | 'yowling' | 'mouse';
 
 // ◈ ◉ ▶ ▷ ☊ ★ ☗ ☬ ☸ ♆ ◑ ⚉ ⚇ ⚓ ⚑ ⚐ ⚕ ⚔ ⚙ ⚚ ⚡ ⚠ ⛬ ⛶ ✐ ⧮ ⧯ ⧳ ⧲ ⧱ ⧰ ⨯ ⩎ ⩏ ⫘ ꔮ ꔀ
 
@@ -25,4 +25,5 @@ export const skills: Skill[] = [
     { name: 'copycat', icon: '♅', description: 'Immediately |heal| back\nto full |9 lives', repeatable: true },
     { name: 'hairball', icon: '㉦', description: '|Cats| take |30%| longer\nto |move| on the |board', repeatable: true },
     { name: 'purr', icon: '𐄷', description: '|Imperfect sums| increase\nthe |max multiplier| too' },
+    { name: 'mouse', icon: '𐡸', description: '|Closest cat| to a |picked\n|tile| jumps |on top| of it' },
 ];
