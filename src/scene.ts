@@ -96,7 +96,7 @@ export class Scene extends Container {
 
         this.findTarget();
         // this.skills.push(skills.find(s => s.name === 'nine'));
-        // setTimeout(() => this.presentSkills(), 1000);
+        setTimeout(() => this.presentSkills(), 1000);
     }
 
     private scaleHelpTexts(scale: number): void {
@@ -308,10 +308,12 @@ export class Scene extends Container {
                 t.picked = false;
                 const sleeping = !t.cat?.isAwake();
                 const catMulti = this.has('catnap') ? (sleeping ? 15 : 1) : 5;
-                const amount = t.value * (i + 1) * (t.cat ? catMulti : 1) * this.multi.value * (perfect ? 5 : 1);
+                const allergyMulti = this.has('allergies') ? (t.cat ? 0 : 2) : 1;
+                const amount = t.value * (i + 1) * (t.cat ? catMulti : 1) * this.multi.value * (perfect ? 5 : 1) * allergyMulti;
                 this.score += amount;
                 this.scoreLabel.content = asScore(this.score);
-                this.add(new TextPop(this.game, asScore(amount), t.getCenter(), t.cat ? COLORS.mark: '#fff'));
+                if (allergyMulti > 0) this.add(new TextPop(this.game, asScore(amount), t.getCenter(), t.cat ? COLORS.mark: '#fff'));
+                else this.add(new TextPop(this.game, 'ALLERGIES', t.getCenter(), COLORS.red, 20));
                 if (t.cat) {
                     this.hopCat(t.cat, t);
                 }
