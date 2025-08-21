@@ -110,6 +110,7 @@ export class Scene extends Container {
         this.helpTexts[1].toggle('bonus |effects|...');
         this.skillBg.visible = true;
         this.game.audio.skills();
+        this.game.camera.shake(3, 0.2);
         this.game.getMouse().x = -999;
         
         this.skillButtons = this.getSkills().map((skill, i) => {
@@ -127,6 +128,7 @@ export class Scene extends Container {
                     setTimeout(() => this.marked = skill.name, 500);
                     return;
                 }
+                this.game.camera.shake(2, 0.15);
                 if (skill.name === 'litter') this.maxPossibleMulti++;
                 if (skill.name === 'zoomies') this.multi.dropRate *= 0.8;
                 if (skill.name === 'copycat') this.life.change(9);
