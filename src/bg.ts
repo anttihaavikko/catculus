@@ -5,7 +5,7 @@ export class SkillBg extends Entity {
     public visible: boolean;
 
     constructor(game: Game) {
-        super(game, 0, 300, 860, 310);
+        super(game, -50, 300, 900, 310);
     }
 
     public draw(ctx: CanvasRenderingContext2D): void {
