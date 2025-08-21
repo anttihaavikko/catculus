@@ -293,7 +293,11 @@ export class Scene extends Container {
         this.picks.forEach((t, i) => {
             setTimeout(() => {
                 if (this.has('nine') && t.value === 9) {
-                    this.life.change(this.skillLevel('nine'));
+                    const amt = this.skillLevel('nine');
+                    setTimeout(() => {
+                        this.add(new TextPop(this.game, `+${amt}`, t.getCenter(), COLORS.green, 35));
+                        this.life.change(amt);
+                    }, 300);
                 }
                 if (i % 2 === 0) this.game.audio.setPitch(Math.min(1.5, 1 + i * 0.05));
                 this.game.audio.score(i);
