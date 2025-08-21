@@ -54,6 +54,7 @@ export class Scene extends Container {
     private marked: SkillId;
     private skillBg: SkillBg;
     private skillIcons: TextEntity;
+    private maxPossibleMulti: number = 13;
 
     constructor(game: Game) {
         super(game);
@@ -125,6 +126,7 @@ export class Scene extends Container {
                     setTimeout(() => this.marked = skill.name, 500);
                     return;
                 }
+                if (skill.name === 'meow') this.maxPossibleMulti++;
                 this.skillBg.visible = false;
                 this.game.audio.skill();
                 this.skillButtons.forEach(b => b.dead = true);
@@ -366,7 +368,7 @@ export class Scene extends Container {
         this.showHelp();
         this.level++;
         this.multi.paused = false;
-        this.multi.reset(Math.min(13, this.maxMulti));
+        this.multi.reset(Math.min(this.maxPossibleMulti, this.maxMulti));
         this.target.set(this.generateTarget(this.level + 1));
     }
 
