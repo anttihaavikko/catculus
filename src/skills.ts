@@ -10,6 +10,7 @@ export type SkillId = 'catnip' | 'catnap' | 'sprayer' | 'reflexes' | 'nine' | 'a
     'scratch' | 'beans' | 'zoomies' | 'yowling' | 'mouse';
 
 // ◈ ◉ ▶ ▷ ☊ ★ ☗ ☬ ☸ ♆ ◑ ⚉ ⚇ ⚓ ⚑ ⚐ ⚕ ⚔ ⚙ ⚚ ⚡ ⚠ ⛬ ⛶ ✐ ⧮ ⧯ ⧳ ⧲ ⧱ ⧰ ⨯ ⩎ ⩏ ⫘ ꔮ ꔀ
+// ⚷ ⚶ 𐆂 𖭅 🜟 🜠 🜛 🜤 🜭 🜲 🜶 🜷 🝖 🝮
 
 export const skills: Skill[] = [
     { name: 'catnip', icon: '⚘', description: 'Cats |always jump| to\nthe |highest value| tile' },
