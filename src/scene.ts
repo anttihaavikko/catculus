@@ -372,6 +372,12 @@ export class Scene extends Container {
             appearing.forEach(t => t.appear());
             this.picks.forEach(t => t.increment());
             if (this.has('scratch')) this.tiles.filter(t => !t.hidden && !this.picks.includes(t) && this.picks.some(p => p.isClose(t))).forEach(t => t.increment(-1));
+            if (this.has('loaf')) {
+                this.tiles.filter(t => !t.hidden && t.cat && !t.cat.isAwake()).forEach(t => {
+                    t.increment();
+                    this.add(new TextPop(this.game, 'LOAF', t.getCenter(), COLORS.green, 20));
+                });
+            }
             this.picks = [];
             this.sumLabel.content = '';
             this.addCat();

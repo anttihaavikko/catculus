@@ -28,4 +28,5 @@ export const skills: Skill[] = [
     { name: 'purr', icon: '𐄷', description: '|Imperfect sums| increase\nthe |max multiplier| too' },
     { name: 'mouse', icon: '𐡸', description: '|Closest cat| to a |picked\n|tile| jumps |on top| of it' },
     { name: 'scratch', icon: '⚸', description: 'All |unpicked tiles| around\npicked ones |lower| in |value|' },
+    { name: 'loaf', icon: '𖭅', description: 'Tiles under |sleeping cats\n|increase| in |value|' },
 ];
