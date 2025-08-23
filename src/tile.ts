@@ -58,8 +58,8 @@ export class Tile extends Entity {
         this.pulse(1);
     }
 
-    public increment(): void {
-        this.value++;
+    public increment(amt: number = 1): void {
+        this.value = Math.max(1, this.value + amt);
         this.pulse(1);
         this.sunk = false;
         this.extraDepth = 0;

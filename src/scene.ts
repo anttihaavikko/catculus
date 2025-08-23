@@ -371,6 +371,7 @@ export class Scene extends Container {
             if (appearing.length > 0) this.game.audio.appear();
             appearing.forEach(t => t.appear());
             this.picks.forEach(t => t.increment());
+            if (this.has('scratch')) this.tiles.filter(t => !t.hidden && !this.picks.includes(t) && this.picks.some(p => p.isClose(t))).forEach(t => t.increment(-1));
             this.picks = [];
             this.sumLabel.content = '';
             this.addCat();
