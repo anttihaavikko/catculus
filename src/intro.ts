@@ -26,7 +26,7 @@ export class Intro extends Container {
             tile.p = { x: i * (TILE_SIZE + TILE_GAP) + 220, y: 120 };
             return tile;
         });
-        this.button = new ButtonEntity(game, 'PLAY', 400, 320, 260, 70, () => {
+        this.button = new ButtonEntity(game, '⏵ PLAY ', 400, 320, 260, 70, () => {
             game.changeScene(new Scene(game));
         }, this.game.audio, 35);
         
