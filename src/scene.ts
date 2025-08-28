@@ -121,8 +121,8 @@ export class Scene extends Container {
                 this.helpTexts[1].content = parts[1];
                 this.scaleHelpTexts(this.inPortrait ? 0.8 : 1);
             };
-            const p: Vector = this.inPortrait ? { x: 200, y: 390 + i * 70 } : { x: 200 + 210 * i, y: 350};
-            const button = new ButtonEntity(this.game, `${skill.icon} ${skill.name.toUpperCase()}`, p.x, p.y, 200, 60, () => {
+            const p: Vector = this.inPortrait ? { x: 200, y: 390 + i * 90 } : { x: 150 + 250 * i, y: 350};
+            const button = new ButtonEntity(this.game, `${skill.icon} ${skill.name.toUpperCase()} `, p.x, p.y, 200, 60, () => {
                 if (this.game.usingTouch && this.marked !== skill.name) {
                     showTooltip();
                     setTimeout(() => this.marked = skill.name, 500);

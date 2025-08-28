@@ -84,17 +84,48 @@ export class ButtonEntity extends Entity {
         ctx.save();
         ctx.translate(0, this.hovered ? -this.hoverRise : 0 + this.animationPhaseAbs * 3);
 
-        if (!this.frameless) {
-            ctx.fillStyle = '#000';
-            ctx.fillRect(this.p.x, this.p.y, this.s.x, this.s.y);
-            ctx.fillStyle = this.hovered ? '#FE6847' : '#fff';
-            ctx.fillRect(this.p.x + this.borderThickness, this.p.y + this.borderThickness, this.s.x - this.borderThickness * 2, this.s.y - this.borderThickness * 2);
-        }
+        ctx.fillStyle = ctx.strokeStyle = '#000';
+        ctx.fillRect(this.p.x, this.p.y, this.s.x, this.s.y);
+        ctx.fillStyle = this.hovered ? '#FE6847' : '#fff';
+
+        const drawEar = (pos: number): void => {
+            ctx.beginPath();
+            ctx.moveTo(pos -15, this.p.y + 10);
+            ctx.lineTo(pos, this.p.y - 10);
+            ctx.lineTo(pos + 15, this.p.y + 10);
+            ctx.stroke();
+            ctx.fill();
+        };
+
+        const drawWhisker = (dir: number, height: number): void => {
+            ctx.moveTo(this.p.x + this.s.x * 0.5 + dir * this.s.x * 0.5 - 10 * dir, this.p.y + height * this.s.y);
+            ctx.lineTo(this.p.x + this.s.x * 0.5 + dir * this.s.x * 0.5 + 15 * dir, this.p.y + height * this.s.y);
+        };
+
+        ctx.lineWidth = this.borderThickness * 1.75;
+        drawEar(this.p.x + this.s.x * 0.2);
+        drawEar(this.p.x + this.s.x * 0.8);
+
+        ctx.lineCap = 'round';
+        ctx.lineWidth = this.borderThickness * 1;
+        ctx.beginPath();
+        drawWhisker(1, 0.5);
+        drawWhisker(1, 0.65);
+        drawWhisker(1, 0.8);
+        drawWhisker(-1, 0.5);
+        drawWhisker(-1, 0.65);
+        drawWhisker(-1, 0.8);
+        ctx.stroke();
+        // ctx.strokeStyle = ctx.fillStyle;
+        // ctx.lineWidth = this.borderThickness * 0.5;
+        // ctx.stroke();
+
+        ctx.fillRect(this.p.x + this.borderThickness, this.p.y + this.borderThickness, this.s.x - this.borderThickness * 2, this.s.y - this.borderThickness * 2);
 
         ctx.font =`${this.fontSize}px ${font}`;
         ctx.textBaseline = 'alphabetic';
         ctx.textAlign = 'center';
-        ctx.fillStyle = this.frameless ? '#fff' : this.contentColor;
+        ctx.fillStyle = this.contentColor;
         ctx.strokeStyle = '#000';
         ctx.lineWidth = 6;
         if (this.strokeText) ctx.strokeText(this.content, this.p.x + this.s.x * 0.5, this.p.y + this.s.y * 0.5 + this.fontSize * 0.3);
